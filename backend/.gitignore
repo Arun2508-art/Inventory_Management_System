@@ -1,0 +1,15 @@
+# node modules
+node_modules/
+
+# dotenv files
+.env
+.env.*.local
+
+# log files
+logs/
+*.log
+npm-debug.log*
+
+# OS/editor junk
+.DS_Store
+.vscode/
