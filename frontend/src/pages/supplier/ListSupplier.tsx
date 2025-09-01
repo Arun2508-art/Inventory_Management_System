@@ -8,18 +8,12 @@ import Drawer from '../../components/Drawer';
 import Loading from '../../components/Loading';
 import SearchBar from '../../components/SearchBar';
 import Table1, { type Column } from '../../components/Table1';
-import { fetchAllCategory } from '../../store/slice/categorySlice';
+import { fetchSuppliers } from '../../store/slice/supplierSlice';
 import { useAppDispatch, useAppSelector } from '../../utills/reduxHook';
-import AddCategory from './AddCategory';
+import type { SupplierProps } from '../../utills/types';
+import AddSupplier from './AddSupplier';
 
-interface CategoryProps {
-  _id?: string;
-  name: string;
-  sku: string;
-  description?: string;
-}
-
-const columns: Column<CategoryProps>[] = [
+const columns: Column<SupplierProps>[] = [
   {
     key: 'name',
     label: 'Category Name',
@@ -36,34 +30,31 @@ const columns: Column<CategoryProps>[] = [
       </div>
     ),
   },
-  { key: 'sku', label: 'Category ID' },
-  { key: 'description', label: 'Description' },
+  { key: 'phone', label: 'Phone' },
+  { key: 'email', label: 'Email' },
+  { key: 'address', label: 'Address' },
 ];
 
-const ListCategory = () => {
+const ListSupplier = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
-  const { categoryList, isLoading, error } = useAppSelector(
-    (state) => state.categoryData
+  const { suppliers, isLoading, error } = useAppSelector(
+    (state) => state.supplierData
   );
 
   useEffect(() => {
-    dispatch(fetchAllCategory());
+    dispatch(fetchSuppliers());
   }, [dispatch]);
 
   return (
     <>
       <div className='w-full min-h-[calc(100vh-72px)] bg-blue-50 p-4'>
-        <h2 className='font-semibold text-xl mb-4'>Categories</h2>
+        <h2 className='font-semibold text-xl mb-4'>Supplier</h2>
 
         {isLoading ? (
           <Loading />
         ) : error ? (
           <p className='text-red-600'>Error: {error}</p>
-        ) : categoryList.length === 0 ? (
-          <p className='h-[calc(100vh-150px)] flex justify-center items-center'>
-            No categories available.
-          </p>
         ) : (
           <div className='bg-blue-100 rounded-md shadow-md'>
             <div className='flex justify-between items-center gap-4 px-4 py-3 mb-1'>
@@ -94,23 +85,28 @@ const ListCategory = () => {
                 />
               </div>
             </div>
-
-            <Table1<CategoryProps>
-              columns={columns}
-              data={categoryList}
-              showCheckboxes
-              onEdit={(row) => console.log('Edit', row)}
-              onDelete={(row) => console.log('Delete', row)}
-            />
+            {suppliers.length === 0 ? (
+              <p className='h-[calc(100vh-210px)] flex justify-center items-center'>
+                No supplier details available.
+              </p>
+            ) : (
+              <Table1<SupplierProps>
+                columns={columns}
+                data={suppliers}
+                showCheckboxes
+                onView={(row) => console.log('View', row)}
+                onEdit={(row) => console.log('Edit', row)}
+                onDelete={(row) => console.log('Delete', row)}
+              />
+            )}
           </div>
         )}
       </div>
-
-      <Drawer title='Add Category' isOpen={open} onClose={() => setOpen(false)}>
-        <AddCategory onSuccess={() => setOpen(false)} />
+      <Drawer title='Add Supplier' isOpen={open} onClose={() => setOpen(false)}>
+        <AddSupplier onSuccess={() => setOpen(false)} />
       </Drawer>
     </>
   );
 };
 
-export default ListCategory;
+export default ListSupplier;

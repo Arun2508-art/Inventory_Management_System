@@ -7,6 +7,8 @@ const cors = require('cors');
 require('dotenv').config();
 const ProductRoutes = require('./routes/productRouter');
 const categoryRoutes = require('./routes/categoryRoutes');
+const supplierRoutes = require('./routes/supplierRoutes');
+const customerRoutes = require('./routes/customerRoutes');
 
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -24,5 +26,7 @@ app.use(express.json());
 
 app.use('/api/products', ProductRoutes);
 app.use('/api/category', categoryRoutes);
+app.use('/api/suppliers', supplierRoutes);
+app.use('/api/customer', customerRoutes);
 
 app.listen(PORT, () => console.log(`server is running on PORT ${PORT}`));

@@ -5,7 +5,14 @@ export const menuItems = [
       { icon: '/home.svg', label: 'Dashboard', href: '/dashboard' },
       { icon: '/home.svg', label: 'Products', href: '/products' },
       { icon: '/home.svg', label: 'Categories', href: '/categories' },
-      { icon: '/user.svg', label: 'User', href: '/user' },
+      {
+        icon: '/user.svg',
+        label: 'User',
+        options: [
+          { label: 'Staff', href: '/user/staff' },
+          { label: 'Customer', href: '/user/customer' },
+        ],
+      },
       { icon: '/home.svg', label: 'Stock Levels', href: '/stock-levels' },
       { icon: '/home.svg', label: 'Warehouses', href: '/warehouses' },
       { icon: '/home.svg', label: 'Suppliers', href: '/suppliers' },

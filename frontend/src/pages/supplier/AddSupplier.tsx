@@ -1,23 +1,19 @@
 import { type ChangeEvent, type FormEvent, useState } from 'react';
 import Input from '../../components/Input';
-import { addCategory } from '../../store/slice/categorySlice';
+import { addSupplier } from '../../store/slice/supplierSlice';
 import { useAppDispatch } from '../../utills/reduxHook';
+import type { SupplierProps } from '../../utills/types';
 
-interface ProductForm {
-  name: string;
-  sku: string;
-  description: string;
-}
-
-interface AddCategoryProps {
+interface AddSupplierProps {
   onSuccess: () => void;
 }
 
-const AddCategory = ({ onSuccess }: AddCategoryProps) => {
-  const [form, setForm] = useState<ProductForm>({
+const AddSupplier = ({ onSuccess }: AddSupplierProps) => {
+  const [form, setForm] = useState<Omit<SupplierProps, '_id'>>({
     name: '',
-    sku: '',
-    description: '',
+    phone: '',
+    email: '',
+    address: '',
   });
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -34,7 +30,7 @@ const AddCategory = ({ onSuccess }: AddCategoryProps) => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!form.name || !form.sku) {
+    if (!form.name) {
       setError('Please fill in all required fields.');
       return;
     }
@@ -43,18 +39,19 @@ const AddCategory = ({ onSuccess }: AddCategoryProps) => {
     setError('');
 
     try {
-      const result = await dispatch(addCategory(form));
-      if (addCategory.fulfilled.match(result)) {
+      const result = await dispatch(addSupplier(form));
+      if (addSupplier.fulfilled.match(result)) {
         onSuccess();
-        alert('Category added successfully');
+        alert('Supplier added successfully');
         setForm({
           name: '',
-          sku: '',
-          description: '',
+          phone: '',
+          email: '',
+          address: '',
         });
       }
     } catch (err) {
-      setError('Error adding Category. Please try again.');
+      setError('Error adding Supplier. Please try again.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -75,27 +72,38 @@ const AddCategory = ({ onSuccess }: AddCategoryProps) => {
       />
 
       <Input
-        id='sku'
+        id='email'
         className='mb-4'
-        label='SKU'
-        name='sku'
-        placeholder='SKU'
-        value={form.sku}
+        label='Email'
+        name='email'
+        placeholder='email'
+        value={form.email}
+        onChange={handleChange}
+        required
+      />
+
+      <Input
+        id='phone'
+        className='mb-4'
+        label='Phone'
+        name='phone'
+        placeholder='Phone'
+        value={form.phone}
         onChange={handleChange}
         required
       />
 
       <div className='flex flex-col gap-2 mb-4'>
         <label htmlFor='description' className='font-semibold'>
-          Description
+          Address
         </label>
 
         <textarea
-          id='description'
-          name='description'
-          placeholder='Description'
+          id='address'
+          name='address'
+          placeholder='Address'
           className='ring-1 ring-gray-400 p-2 rounded outline-blue-300'
-          value={form.description}
+          value={form.address}
           onChange={handleChange}
         />
       </div>
@@ -105,10 +113,10 @@ const AddCategory = ({ onSuccess }: AddCategoryProps) => {
         disabled={loading}
         className='bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700 cursor-pointer'
       >
-        {loading ? 'Adding...' : 'Add Category'}
+        {loading ? 'Adding...' : 'Add'}
       </button>
     </form>
   );
 };
 
-export default AddCategory;
+export default AddSupplier;

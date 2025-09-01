@@ -3,10 +3,17 @@ const Category = require('../models/Category');
 // GET all categories
 const fetchAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
-    res.json(categories);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const allCategory = await Category.find();
+    return res.status(200).json({
+      success: true,
+      data: allCategory,
+    });
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'An error occurred while fetching categories',
+    });
   }
 };
 
@@ -17,7 +24,10 @@ const addCategory = async (req, res) => {
 
   try {
     const newCategory = await category.save();
-    res.status(201).json(newCategory);
+    res.status(201).json({
+      success: true,
+      data: newCategory,
+    });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

@@ -1,0 +1,67 @@
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
+import type { SupplierProps } from '../../utills/types';
+
+interface SupplierState {
+  suppliers: SupplierProps[];
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
+  isLoading: boolean;
+}
+
+const initialState: SupplierState = {
+  suppliers: [],
+  status: 'idle',
+  error: null,
+  isLoading: false,
+};
+
+// Fetch all suppliers
+export const fetchSuppliers = createAsyncThunk(
+  'supplier/fetchSuppliers',
+  async () => {
+    const response = await axios.get('http://localhost:5000/api/suppliers');
+    return response.data;
+  }
+);
+
+// Add a new supplier
+export const addSupplier = createAsyncThunk(
+  'supplier/addSupplier',
+  async (newSupplier: Omit<SupplierProps, '_id'>) => {
+    const response = await axios.post(
+      'http://localhost:5000/api/suppliers',
+      newSupplier
+    );
+    return response.data;
+  }
+);
+
+const supplierSlice = createSlice({
+  name: 'supplier',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchSuppliers.pending, (state) => {
+        state.status = 'loading';
+        state.isLoading = true;
+      })
+      .addCase(fetchSuppliers.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.isLoading = false;
+        state.suppliers = action.payload.data;
+      })
+      .addCase(fetchSuppliers.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Failed to fetch suppliers';
+        state.isLoading = false;
+      })
+      .addCase(addSupplier.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.suppliers.push(action.payload);
+      });
+  },
+});
+
+export default supplierSlice.reducer;
