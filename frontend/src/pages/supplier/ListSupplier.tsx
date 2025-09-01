@@ -4,11 +4,15 @@ import {
   IconFilter2,
 } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import Drawer from '../../components/Drawer';
 import Loading from '../../components/Loading';
 import SearchBar from '../../components/SearchBar';
 import Table1, { type Column } from '../../components/Table1';
-import { fetchSuppliers } from '../../store/slice/supplierSlice';
+import {
+  deleteSupplier,
+  fetchSuppliers,
+} from '../../store/slice/supplierSlice';
 import { useAppDispatch, useAppSelector } from '../../utills/reduxHook';
 import type { SupplierProps } from '../../utills/types';
 import AddSupplier from './AddSupplier';
@@ -41,6 +45,13 @@ const ListSupplier = () => {
   const { suppliers, isLoading, error } = useAppSelector(
     (state) => state.supplierData
   );
+
+  const handleDelete = async (data: SupplierProps) => {
+    const result = await dispatch(deleteSupplier(data._id));
+    if (deleteSupplier.fulfilled.match(result)) {
+      toast.success('Supplier deleted successfully');
+    }
+  };
 
   useEffect(() => {
     dispatch(fetchSuppliers());
@@ -96,7 +107,7 @@ const ListSupplier = () => {
                 showCheckboxes
                 onView={(row) => console.log('View', row)}
                 onEdit={(row) => console.log('Edit', row)}
-                onDelete={(row) => console.log('Delete', row)}
+                onDelete={handleDelete}
               />
             )}
           </div>

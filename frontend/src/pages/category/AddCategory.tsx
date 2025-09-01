@@ -1,20 +1,16 @@
 import { type ChangeEvent, type FormEvent, useState } from 'react';
+import { toast } from 'react-toastify';
 import Input from '../../components/Input';
 import { addCategory } from '../../store/slice/categorySlice';
 import { useAppDispatch } from '../../utills/reduxHook';
-
-interface ProductForm {
-  name: string;
-  sku: string;
-  description: string;
-}
+import type { CategoryProps } from '../../utills/types';
 
 interface AddCategoryProps {
   onSuccess: () => void;
 }
 
 const AddCategory = ({ onSuccess }: AddCategoryProps) => {
-  const [form, setForm] = useState<ProductForm>({
+  const [form, setForm] = useState<Omit<CategoryProps, '_id'>>({
     name: '',
     sku: '',
     description: '',
@@ -46,7 +42,7 @@ const AddCategory = ({ onSuccess }: AddCategoryProps) => {
       const result = await dispatch(addCategory(form));
       if (addCategory.fulfilled.match(result)) {
         onSuccess();
-        alert('Category added successfully');
+        toast.success('Category added successfully');
         setForm({
           name: '',
           sku: '',

@@ -43,10 +43,28 @@ export const addCustomer = createAsyncThunk(
       if (response.data.success) {
         return response.data;
       } else {
-        throw new Error('Failed to add category');
+        throw new Error('Failed to add customer');
       }
     } catch (error: any) {
-      return rejectWithValue(error.message || 'Failed to add category');
+      return rejectWithValue(error.message || 'Failed to add customer');
+    }
+  }
+);
+
+export const deleteCustomer = createAsyncThunk(
+  'customer/delete',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:5000/api/customer/${id}`
+      );
+      if (response.data.success) {
+        return response.data;
+      } else {
+        throw new Error('Failed to delete customer');
+      }
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to delete customer');
     }
   }
 );
@@ -84,6 +102,23 @@ const customerSlice = createSlice({
         state.status = 'failed';
         state.isLoading = false;
         state.error = (action.payload as string) || 'Failed to add customer';
+      })
+      .addCase(deleteCustomer.pending, (state) => {
+        state.status = 'loading';
+        state.isLoading = true;
+      })
+      .addCase(deleteCustomer.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.isLoading = false;
+        state.customers = state.customers.filter(
+          (customer) => customer._id !== action.payload.data._id
+        );
+        state.error = null;
+      })
+      .addCase(deleteCustomer.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Failed to fetch customer';
+        state.isLoading = false;
       });
   },
 });

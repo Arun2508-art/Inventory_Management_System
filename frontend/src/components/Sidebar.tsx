@@ -1,10 +1,12 @@
 import { IconChevronDown } from '@tabler/icons-react';
 import { useState } from 'react';
-import { NavLink } from 'react-router';
+import { NavLink, useLocation } from 'react-router';
 import { menuItems } from '../utills/sidebar';
 
 const Sidebar = () => {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const location = useLocation();
+  console.log(location);
 
   const toggleSubmenu = (label: string) => {
     setOpenSubmenu(openSubmenu === label ? null : label);
@@ -44,10 +46,10 @@ const Sidebar = () => {
                     openSubmenu === item.label ? 'max-h-96' : 'max-h-0'
                   }`}
                 >
-                  {item.options.map((item) => (
+                  {item.options.map((option) => (
                     <NavLink
-                      to={item.href}
-                      key={item.label}
+                      to={option.href}
+                      key={option.label}
                       className={({ isActive, isPending, isTransitioning }) =>
                         `flex items-center justify-center lg:justify-start gap-3 py-2 md:px-2 rounded-md text-gray-500 hover:bg-sky-100 ${
                           isActive ? 'bg-blue-100' : ''
@@ -56,7 +58,7 @@ const Sidebar = () => {
                         }`
                       }
                     >
-                      <div className='hidden lg:block'>{item.label}</div>
+                      <div className='hidden lg:block'>{option.label}</div>
                     </NavLink>
                   ))}
                 </nav>

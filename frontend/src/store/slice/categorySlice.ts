@@ -1,15 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-
-export interface Category {
-  _id?: string;
-  name: string;
-  sku: string;
-  desc?: string;
-}
+import type { CategoryProps } from '../../utills/types';
 
 interface CategoryState {
-  categoryList: Category[];
+  categoryList: CategoryProps[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
   isLoading: boolean;
@@ -42,7 +36,7 @@ export const fetchAllCategory = createAsyncThunk(
 // Async thunk to add a new category
 export const addCategory = createAsyncThunk(
   'category/addCategory',
-  async (category: Category, { rejectWithValue }) => {
+  async (category: Omit<CategoryProps, '_id'>, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         'http://localhost:5000/api/category',
@@ -65,12 +59,11 @@ export const deleteCategory = createAsyncThunk(
   'category/deleteCategory',
   async (id: string, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        'http://localhost:5000/api/category/delete',
-        { id }
+      const response = await axios.delete(
+        `http://localhost:5000/api/category/${id}`
       );
       if (response.data.success) {
-        return response.data.deletedCategory; // Assuming deleted category info returned
+        return response.data;
       } else {
         throw new Error('Failed to delete category');
       }
@@ -86,11 +79,6 @@ export const categorySlice = createSlice({
   reducers: {
     setCategory: (state, { payload }) => {
       state.categoryList.push(payload);
-    },
-    deleteCategoryy: (state, { payload }) => {
-      state.categoryList = state.categoryList.filter(
-        (category) => category._id !== payload
-      );
     },
   },
   extraReducers(builder) {
@@ -125,22 +113,25 @@ export const categorySlice = createSlice({
       })
       .addCase(deleteCategory.pending, (state) => {
         state.status = 'loading';
+        state.isLoading = true;
       })
       .addCase(deleteCategory.fulfilled, (state, action) => {
         state.status = 'succeeded';
+        state.isLoading = false;
         state.categoryList = state.categoryList.filter(
-          (category) => category._id !== action.payload.deletedCategory._id
+          (category) => category._id !== action.payload.data._id
         );
         state.error = null;
       })
       .addCase(deleteCategory.rejected, (state, action) => {
         state.status = 'failed';
+        state.isLoading = false;
         state.error = (action.payload as string) || 'Failed to delete category';
       });
   },
 });
 
-export const { setCategory, deleteCategoryy } = categorySlice.actions;
+export const { setCategory } = categorySlice.actions;
 
 // export { fecthAllProducts };
 

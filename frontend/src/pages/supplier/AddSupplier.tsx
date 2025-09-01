@@ -1,4 +1,5 @@
 import { type ChangeEvent, type FormEvent, useState } from 'react';
+import { toast } from 'react-toastify';
 import Input from '../../components/Input';
 import { addSupplier } from '../../store/slice/supplierSlice';
 import { useAppDispatch } from '../../utills/reduxHook';
@@ -42,7 +43,7 @@ const AddSupplier = ({ onSuccess }: AddSupplierProps) => {
       const result = await dispatch(addSupplier(form));
       if (addSupplier.fulfilled.match(result)) {
         onSuccess();
-        alert('Supplier added successfully');
+        toast.success('Supplier added successfully');
         setForm({
           name: '',
           phone: '',

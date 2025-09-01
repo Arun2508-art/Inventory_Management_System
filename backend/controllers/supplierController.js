@@ -24,7 +24,6 @@ const addSupplier = async (req, res) => {
 
   try {
     const newSupplier = await supplier.save();
-    console.log(newSupplier);
     res.status(201).json(newSupplier);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -49,11 +48,16 @@ const updateSupplier = async (req, res) => {
 const deleteSupplier = async (req, res) => {
   try {
     const supplier = await Supplier.findByIdAndDelete(req.params.id);
-    if (!supplier)
-      return res.status(404).json({ message: 'Supplier not found' });
-    res.json({ message: 'Supplier deleted' });
+    if (!supplier) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'Supplier not found' });
+    }
+    res
+      .status(201)
+      .json({ success: true, message: 'Supplier deleted', data: supplier });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 

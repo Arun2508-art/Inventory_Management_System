@@ -4,20 +4,18 @@ import {
   IconFilter2,
 } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import Drawer from '../../components/Drawer';
 import Loading from '../../components/Loading';
 import SearchBar from '../../components/SearchBar';
 import Table1, { type Column } from '../../components/Table1';
-import { fetchAllCategory } from '../../store/slice/categorySlice';
+import {
+  deleteCategory,
+  fetchAllCategory,
+} from '../../store/slice/categorySlice';
 import { useAppDispatch, useAppSelector } from '../../utills/reduxHook';
+import type { CategoryProps } from '../../utills/types';
 import AddCategory from './AddCategory';
-
-interface CategoryProps {
-  _id?: string;
-  name: string;
-  sku: string;
-  description?: string;
-}
 
 const columns: Column<CategoryProps>[] = [
   {
@@ -46,6 +44,13 @@ const ListCategory = () => {
   const { categoryList, isLoading, error } = useAppSelector(
     (state) => state.categoryData
   );
+
+  const handleDelete = async (data: CategoryProps) => {
+    const result = await dispatch(deleteCategory(data._id));
+    if (deleteCategory.fulfilled.match(result)) {
+      toast.success('Category deleted successfully');
+    }
+  };
 
   useEffect(() => {
     dispatch(fetchAllCategory());
@@ -100,7 +105,7 @@ const ListCategory = () => {
               data={categoryList}
               showCheckboxes
               onEdit={(row) => console.log('Edit', row)}
-              onDelete={(row) => console.log('Delete', row)}
+              onDelete={handleDelete}
             />
           </div>
         )}
