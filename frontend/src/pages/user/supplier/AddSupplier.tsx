@@ -1,9 +1,9 @@
 import { type ChangeEvent, type FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
-import Input from '../../components/Input';
-import { addSupplier } from '../../store/slice/supplierSlice';
-import { useAppDispatch } from '../../utills/reduxHook';
-import type { SupplierProps } from '../../utills/types';
+import Input from '../../../components/Input';
+import { addSupplier } from '../../../store/slice/supplierSlice';
+import { useAppDispatch } from '../../../utills/reduxHook';
+import type { SupplierProps } from '../../../utills/types';
 
 interface AddSupplierProps {
   onSuccess: () => void;
@@ -12,6 +12,7 @@ interface AddSupplierProps {
 const AddSupplier = ({ onSuccess }: AddSupplierProps) => {
   const [form, setForm] = useState<Omit<SupplierProps, '_id'>>({
     name: '',
+    contactPerson: '',
     phone: '',
     email: '',
     address: '',
@@ -46,6 +47,7 @@ const AddSupplier = ({ onSuccess }: AddSupplierProps) => {
         toast.success('Supplier added successfully');
         setForm({
           name: '',
+          contactPerson: '',
           phone: '',
           email: '',
           address: '',
@@ -68,6 +70,17 @@ const AddSupplier = ({ onSuccess }: AddSupplierProps) => {
         label='Name'
         placeholder='Name'
         value={form.name}
+        onChange={handleChange}
+        required
+      />
+
+      <Input
+        id='contactPerson'
+        className='mb-4'
+        label='Contact Person'
+        name='contactPerson'
+        placeholder='Contact Person'
+        value={form.contactPerson}
         onChange={handleChange}
         required
       />

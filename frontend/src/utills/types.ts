@@ -6,6 +6,10 @@ export type userRole =
   | 'sales'
   | '';
 
+export interface OnSuccessHandlerProps {
+  onSuccess: () => void;
+}
+
 export interface CategoryProps {
   _id: string;
   name: string;
@@ -33,6 +37,7 @@ export interface employeeProps {
 export interface SupplierProps {
   _id: string;
   name: string;
+  contactPerson: string;
   phone: string;
   email: string;
   address: string;
@@ -44,4 +49,14 @@ export interface CustomerProps {
   phone: string;
   email: string;
   address: string;
+}
+
+export interface warehouseProps {
+  _id: string;
+  name: string;
+  contactPerson: string;
+  sku: string;
+  location: string;
+  status?: 'active' | 'inactive' | '';
+  description?: string;
 }

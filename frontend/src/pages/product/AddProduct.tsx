@@ -1,5 +1,7 @@
+import { IconCircleArrowLeft } from '@tabler/icons-react';
 import axios from 'axios';
 import { type ChangeEvent, type FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router';
 import Input from '../../components/Input';
 
 interface ProductForm {
@@ -25,6 +27,7 @@ const AddProduct = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const navigate = useNavigate();
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -43,8 +46,6 @@ const AddProduct = () => {
 
     setLoading(true);
     setError('');
-
-    console.log(form);
 
     try {
       await axios.post('http://localhost:5000/api/products', {
@@ -72,7 +73,17 @@ const AddProduct = () => {
 
   return (
     <div className='w-full min-h-[calc(100vh-72px)] bg-blue-50 p-4'>
-      <h2 className='font-semibold text-xl mb-4'>Add Product</h2>
+      <div className='flex gap-2 items-center mb-4'>
+        <div>
+          <IconCircleArrowLeft
+            width={24}
+            height={24}
+            className='text-blue-500 hover:text-blue-800 cursor-pointer'
+            onClick={() => navigate('/products')}
+          />
+        </div>
+        <h2 className='font-semibold text-xl mb-1'>Add Product</h2>
+      </div>
       <div className='bg-white rounded-md p-4'>
         <form onSubmit={handleSubmit}>
           <div className='flex gap-4 flex-wrap mb-4'>

@@ -1,11 +1,6 @@
-import {
-  IconCirclePlus,
-  IconFileDownload,
-  IconFilter2,
-} from '@tabler/icons-react';
 import { useEffect } from 'react';
-import { Link } from 'react-router';
 import { toast } from 'react-toastify';
+import ActionIcons from '../../../components/ActionIcons';
 import Loading from '../../../components/Loading';
 import SearchBar from '../../../components/SearchBar';
 import type { Column } from '../../../components/Table1';
@@ -72,31 +67,9 @@ const ListStaff = () => {
             <div>
               <SearchBar />
             </div>
-            <div className='flex gap-3 items-center'>
-              <IconFilter2
-                stroke={1}
-                width={20}
-                height={20}
-                className='text-blue-600 hover:text-blue-900 cursor-pointer'
-              />
-
-              <Link to='add'>
-                <IconCirclePlus
-                  stroke={1}
-                  width={20}
-                  height={20}
-                  className='text-green-600 hover:text-green-900 cursor-pointer'
-                />
-              </Link>
-
-              <IconFileDownload
-                stroke={1}
-                width={20}
-                height={20}
-                className='text-orange-600 hover:text-orange-900 cursor-pointer'
-              />
-            </div>
+            <ActionIcons addLink />
           </div>
+
           {employee.length === 0 ? (
             <p className='h-[calc(100vh-210px)] flex justify-center items-center'>
               No employee details available.

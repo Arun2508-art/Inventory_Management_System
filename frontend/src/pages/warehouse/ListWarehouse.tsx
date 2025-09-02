@@ -6,17 +6,17 @@ import Loading from '../../components/Loading';
 import SearchBar from '../../components/SearchBar';
 import Table1, { type Column } from '../../components/Table1';
 import {
-  deleteCategory,
-  fetchAllCategory,
-} from '../../store/slice/categorySlice';
+  deleteWarehouse,
+  fetchWarehouses,
+} from '../../store/slice/warehouseSlice';
 import { useAppDispatch, useAppSelector } from '../../utills/reduxHook';
-import type { CategoryProps } from '../../utills/types';
-import AddCategory from './AddCategory';
+import type { warehouseProps } from '../../utills/types';
+import AddWarehouse from './AddWarehouse';
 
-const columns: Column<CategoryProps>[] = [
+const columns: Column<warehouseProps>[] = [
   {
     key: 'name',
-    label: 'Category Name',
+    label: 'Name',
     render: (value) => (
       <div className='flex gap-2 items-center'>
         <img
@@ -30,32 +30,35 @@ const columns: Column<CategoryProps>[] = [
       </div>
     ),
   },
-  { key: 'sku', label: 'Category ID' },
+  { key: 'contactPerson', label: 'Contact Person' },
+  { key: 'sku', label: 'Warehouse ID' },
+  { key: 'location', label: 'Address' },
+  { key: 'status', label: 'Status' },
   { key: 'description', label: 'Description' },
 ];
 
-const ListCategory = () => {
+const ListWarehouse = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
-  const { categoryList, isLoading, error } = useAppSelector(
-    (state) => state.categoryData
+  const { warehouseList, isLoading, error } = useAppSelector(
+    (state) => state.warehouseData
   );
 
-  const handleDelete = async (data: CategoryProps) => {
-    const result = await dispatch(deleteCategory(data._id));
-    if (deleteCategory.fulfilled.match(result)) {
-      toast.success('Category deleted successfully');
+  const handleDelete = async (data: warehouseProps) => {
+    const result = await dispatch(deleteWarehouse(data._id));
+    if (deleteWarehouse.fulfilled.match(result)) {
+      toast.success('Warehouse deleted successfully');
     }
   };
 
   useEffect(() => {
-    dispatch(fetchAllCategory());
+    dispatch(fetchWarehouses());
   }, [dispatch]);
 
   return (
     <>
       <div className='w-full min-h-[calc(100vh-72px)] bg-blue-50 p-4'>
-        <h2 className='font-semibold text-xl mb-4'>Categories</h2>
+        <h2 className='font-semibold text-xl mb-4'>Warehouse's</h2>
 
         {isLoading ? (
           <Loading />
@@ -64,30 +67,18 @@ const ListCategory = () => {
         ) : (
           <div className='bg-blue-100 rounded-md shadow-md'>
             <div className='flex justify-between items-center gap-4 px-4 py-3 mb-1'>
-              <div>
-                <SearchBar />
-              </div>
-              {/* <div className='flex gap-3 items-center'>
-                <IconFilter2 className='text-blue-600 hover:text-blue-900 cursor-pointer' />
-
-                <IconCirclePlus
-                  className='text-green-600 hover:text-green-900 cursor-pointer'
-                  onClick={() => setOpen(true)}
-                />
-
-                <IconFileDownload className='text-orange-600 hover:text-orange-900 cursor-pointer' />
-              </div> */}
+              <SearchBar />
               <ActionIcons onAdd={() => setOpen(true)} />
             </div>
 
-            {categoryList.length === 0 ? (
-              <p className='h-[calc(100vh-150px)] flex justify-center items-center'>
-                No categories available.
+            {warehouseList.length === 0 ? (
+              <p className='h-[calc(100vh-210px)] flex justify-center items-center'>
+                No Warehouse details available.
               </p>
             ) : (
-              <Table1<CategoryProps>
+              <Table1<warehouseProps>
                 columns={columns}
-                data={categoryList}
+                data={warehouseList}
                 showCheckboxes
                 onEdit={(row) => console.log('Edit', row)}
                 onDelete={handleDelete}
@@ -97,11 +88,15 @@ const ListCategory = () => {
         )}
       </div>
 
-      <Drawer title='Add Category' isOpen={open} onClose={() => setOpen(false)}>
-        <AddCategory onSuccess={() => setOpen(false)} />
+      <Drawer
+        title='Add Warehouse'
+        isOpen={open}
+        onClose={() => setOpen(false)}
+      >
+        <AddWarehouse onSuccess={() => setOpen(false)} />
       </Drawer>
     </>
   );
 };
 
-export default ListCategory;
+export default ListWarehouse;

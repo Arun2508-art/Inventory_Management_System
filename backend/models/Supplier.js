@@ -8,6 +8,10 @@ const SupplierSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
+    contactPerson: {
+      type: String,
+      required: true,
+    },
     phone: { type: String, unique: true, required: true },
     email: {
       type: String,

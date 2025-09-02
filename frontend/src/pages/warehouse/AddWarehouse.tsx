@@ -1,18 +1,24 @@
 import { type ChangeEvent, type FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 import Input from '../../components/Input';
-import { addCategory } from '../../store/slice/categorySlice';
+import Select from '../../components/Select';
+import { addWarehouse } from '../../store/slice/warehouseSlice';
 import { useAppDispatch } from '../../utills/reduxHook';
-import type { CategoryProps } from '../../utills/types';
+import type { OnSuccessHandlerProps, warehouseProps } from '../../utills/types';
 
-interface AddCategoryProps {
-  onSuccess: () => void;
-}
+const statusData = [
+  { value: '', label: 'Please Select status' },
+  { value: 'active', label: 'Active' },
+  { value: 'inactive', label: 'In Active' },
+];
 
-const AddCategory = ({ onSuccess }: AddCategoryProps) => {
-  const [form, setForm] = useState<Omit<CategoryProps, '_id'>>({
+const AddWarehouse = ({ onSuccess }: OnSuccessHandlerProps) => {
+  const [form, setForm] = useState<Omit<warehouseProps, '_id'>>({
     name: '',
+    contactPerson: '',
     sku: '',
+    location: '',
+    status: 'active',
     description: '',
   });
 
@@ -39,18 +45,21 @@ const AddCategory = ({ onSuccess }: AddCategoryProps) => {
     setError('');
 
     try {
-      const result = await dispatch(addCategory(form));
-      if (addCategory.fulfilled.match(result)) {
+      const result = await dispatch(addWarehouse(form));
+      if (addWarehouse.fulfilled.match(result)) {
         onSuccess();
-        toast.success('Category added successfully');
+        toast.success('Warehouse added successfully');
         setForm({
           name: '',
+          contactPerson: '',
           sku: '',
+          location: '',
+          status: 'active',
           description: '',
         });
       }
     } catch (err) {
-      setError('Error adding Category. Please try again.');
+      setError('Error adding Warehouse. Please try again.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -69,7 +78,16 @@ const AddCategory = ({ onSuccess }: AddCategoryProps) => {
         onChange={handleChange}
         required
       />
-
+      <Input
+        id='contactPerson'
+        className='mb-4'
+        name='contactPerson'
+        label='Contact Person'
+        placeholder='Contact Person'
+        value={form.contactPerson}
+        onChange={handleChange}
+        required
+      />
       <Input
         id='sku'
         className='mb-4'
@@ -80,7 +98,25 @@ const AddCategory = ({ onSuccess }: AddCategoryProps) => {
         onChange={handleChange}
         required
       />
-
+      <Input
+        id='location'
+        className='mb-4'
+        name='location'
+        label='Location'
+        placeholder='location'
+        value={form.location}
+        onChange={handleChange}
+        required
+      />
+      <Select
+        name='status'
+        className='mb-4'
+        id='status'
+        label='Status'
+        defaultValue='active'
+        optionList={statusData}
+        required
+      />
       <div className='flex flex-col gap-2 mb-4'>
         <label htmlFor='description' className='font-semibold'>
           Description
@@ -107,4 +143,4 @@ const AddCategory = ({ onSuccess }: AddCategoryProps) => {
   );
 };
 
-export default AddCategory;
+export default AddWarehouse;

@@ -10,6 +10,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
 const supplierRoutes = require('./routes/supplierRoutes');
 const customerRoutes = require('./routes/customerRoutes');
+const warehouseRoutes = require('./routes/warehouseRoutes');
 
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -30,5 +31,6 @@ app.use('/api/category', categoryRoutes);
 app.use('/api/employee', employeeRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/customer', customerRoutes);
+app.use('/api/warehouse', warehouseRoutes);
 
 app.listen(PORT, () => console.log(`server is running on PORT ${PORT}`));

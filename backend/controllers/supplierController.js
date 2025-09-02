@@ -19,8 +19,8 @@ const fetchSuppliers = async (req, res) => {
 
 // POST create new Supplier
 const addSupplier = async (req, res) => {
-  const { name, email, phone, address } = req.body;
-  const supplier = new Supplier({ name, email, phone, address });
+  const { name, contactPerson, email, phone, address } = req.body;
+  const supplier = new Supplier({ name, contactPerson, email, phone, address });
 
   try {
     const newSupplier = await supplier.save();

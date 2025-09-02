@@ -1,10 +1,6 @@
-import {
-  IconCirclePlus,
-  IconFileDownload,
-  IconFilter2,
-} from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import ActionIcons from '../../../components/ActionIcons';
 import Drawer from '../../../components/Drawer';
 import Loading from '../../../components/Loading';
 import SearchBar from '../../../components/SearchBar';
@@ -73,30 +69,12 @@ const ListCustomer = () => {
               <div>
                 <SearchBar />
               </div>
-              <div className='flex gap-3 items-center'>
-                <IconFilter2
-                  stroke={1}
-                  width={20}
-                  height={20}
-                  className='text-blue-600 hover:text-blue-900 cursor-pointer'
-                />
-
-                <IconCirclePlus
-                  stroke={1}
-                  width={20}
-                  height={20}
-                  className='text-green-600 hover:text-green-900 cursor-pointer'
-                  onClick={() => setOpen(true)}
-                />
-
-                <IconFileDownload
-                  stroke={1}
-                  width={20}
-                  height={20}
-                  className='text-orange-600 hover:text-orange-900 cursor-pointer'
-                />
-              </div>
+              <ActionIcons
+                onAdd={() => setOpen(true)}
+                onDownload={() => console.log('delete')}
+              />
             </div>
+
             {customers.length === 0 ? (
               <p className='h-[calc(100vh-210px)] flex justify-center items-center'>
                 No supplier details available.

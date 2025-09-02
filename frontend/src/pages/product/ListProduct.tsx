@@ -1,11 +1,6 @@
-import {
-  IconCirclePlus,
-  IconFileDownload,
-  IconFilter2,
-} from '@tabler/icons-react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router';
+import ActionIcons from '../../components/ActionIcons';
 import SearchBar from '../../components/SearchBar';
 import type { Column } from '../../components/Table1';
 import Table1 from '../../components/Table1';
@@ -130,28 +125,26 @@ const ListProduct = () => {
               <div>
                 <SearchBar />
               </div>
-              <div className='flex gap-3 items-center'>
+              {/* <div className='flex gap-3 items-center'>
                 <IconFilter2
-                  stroke={1}
-                  width={20}
-                  height={20}
+                  width={24}
+                  height={24}
                   className='text-blue-600 hover:text-blue-900 cursor-pointer'
                 />
                 <Link to='add'>
                   <IconCirclePlus
-                    stroke={1}
-                    width={20}
-                    height={20}
+                    width={24}
+                    height={24}
                     className='text-green-600 hover:text-green-900 cursor-pointer'
                   />
                 </Link>
                 <IconFileDownload
-                  stroke={1}
-                  width={20}
-                  height={20}
+                  width={24}
+                  height={24}
                   className='text-orange-600 hover:text-orange-900 cursor-pointer'
                 />
-              </div>
+              </div> */}
+              <ActionIcons addLink />
             </div>
 
             <Table1<Product>

@@ -3,19 +3,19 @@ export const menuItems = [
     // title: 'MENU',
     items: [
       { icon: '/home.svg', label: 'Dashboard', href: '/dashboard' },
-      { icon: '/home.svg', label: 'Products', href: '/products' },
-      { icon: '/home.svg', label: 'Categories', href: '/categories' },
+      { icon: '/product.svg', label: 'Products', href: '/products' },
+      { icon: '/category.svg', label: 'Categories', href: '/categories' },
       {
         icon: '/user.svg',
         label: 'User',
         options: [
           { label: 'Staff', href: '/user/staff' },
           { label: 'Customer', href: '/user/customer' },
+          { label: 'Suppliers', href: '/user/suppliers' },
         ],
       },
-      { icon: '/home.svg', label: 'Stock Levels', href: '/stock-levels' },
-      { icon: '/home.svg', label: 'Warehouses', href: '/warehouses' },
-      { icon: '/home.svg', label: 'Suppliers', href: '/suppliers' },
+      { icon: '/warehouse.svg', label: 'Warehouses', href: '/warehouses' },
+
       {
         icon: '/home.svg',
         label: 'Purchase Orders',
@@ -28,7 +28,7 @@ export const menuItems = [
         href: '/stock-transactions',
       },
       {
-        icon: '/home.svg',
+        icon: '/report.svg',
         label: 'Reports',
         options: [
           { label: 'Inventory', href: '/reports/inventory' },

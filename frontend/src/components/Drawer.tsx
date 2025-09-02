@@ -37,7 +37,7 @@ const Drawer = ({ title, isOpen, onClose, children }: DrawerProps) => {
           </button>
         </div>
 
-        <div className='p-4'>{children}</div>
+        <div className='px-4 pt-2 pb-4'>{children}</div>
       </div>
     </>
   );
