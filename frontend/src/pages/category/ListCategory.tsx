@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import ActionIcons from '../../components/ActionIcons';
 import Drawer from '../../components/Drawer';
 import Loading from '../../components/Loading';
+import Pagination from '../../components/Pagination';
 import SearchBar from '../../components/SearchBar';
 import Table1, { type Column } from '../../components/Table1';
 import {
@@ -40,6 +41,17 @@ const ListCategory = () => {
   const { categoryList, isLoading, error } = useAppSelector(
     (state) => state.categoryData
   );
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const totalPages = Math.ceil(categoryList.length / itemsPerPage);
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const currentPageItems = categoryList.slice(startIndex, endIndex);
 
   const handleDelete = async (data: CategoryProps) => {
     const result = await dispatch(deleteCategory(data._id));
@@ -80,18 +92,32 @@ const ListCategory = () => {
               <ActionIcons onAdd={() => setOpen(true)} />
             </div>
 
-            {categoryList.length === 0 ? (
+            {currentPageItems.length === 0 ? (
               <p className='h-[calc(100vh-150px)] flex justify-center items-center'>
                 No categories available.
               </p>
             ) : (
-              <Table1<CategoryProps>
-                columns={columns}
-                data={categoryList}
-                showCheckboxes
-                onEdit={(row) => console.log('Edit', row)}
-                onDelete={handleDelete}
-              />
+              <>
+                <Table1<CategoryProps>
+                  columns={columns}
+                  data={currentPageItems}
+                  showCheckboxes
+                  onEdit={(row) => console.log('Edit', row)}
+                  onDelete={handleDelete}
+                />
+                <Pagination
+                  count={pageNumbers}
+                  activePage={currentPage}
+                  totalCount={totalPages}
+                  onPageChange={setCurrentPage}
+                  itemsPerPageOptions={[5, 10, 20, 50]}
+                  itemsPerPage={itemsPerPage}
+                  onItemsPerPageChange={(newItemsPerPage) => {
+                    setItemsPerPage(newItemsPerPage);
+                    setCurrentPage(1); // reset to page 1 on items per page change
+                  }}
+                />
+              </>
             )}
           </div>
         )}
