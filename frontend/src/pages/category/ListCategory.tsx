@@ -124,7 +124,7 @@ const ListCategory = () => {
       </div>
 
       <Drawer title='Add Category' isOpen={open} onClose={() => setOpen(false)}>
-        <AddCategory onSuccess={() => setOpen(false)} />
+        <AddCategory isOpen={open} onSuccess={() => setOpen(false)} />
       </Drawer>
     </>
   );

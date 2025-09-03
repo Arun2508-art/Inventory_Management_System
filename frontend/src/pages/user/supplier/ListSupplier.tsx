@@ -89,7 +89,7 @@ const ListSupplier = () => {
         )}
       </div>
       <Drawer title='Add Supplier' isOpen={open} onClose={() => setOpen(false)}>
-        <AddSupplier onSuccess={() => setOpen(false)} />
+        <AddSupplier isOpen={open} onSuccess={() => setOpen(false)} />
       </Drawer>
     </>
   );

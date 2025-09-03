@@ -67,7 +67,7 @@ const deleteWarehouse = async (req, res) => {
         .status(404)
         .json({ success: false, message: 'Warehouse not found' });
     }
-    res.json({ success: true, data: deleteWarehouse });
+    res.json({ success: true, data: deletedWarehouse });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

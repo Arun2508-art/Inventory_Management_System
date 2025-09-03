@@ -1,107 +1,89 @@
-import { type ChangeEvent, type FormEvent, useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useEffect } from 'react';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import Input from '../../components/Input';
+import Textarea from '../../components/Textarea';
 import { addCategory } from '../../store/slice/categorySlice';
 import { useAppDispatch } from '../../utills/reduxHook';
-import type { CategoryProps } from '../../utills/types';
+import type { CategoryProps, OnSuccessHandlerProps } from '../../utills/types';
+import { categorySchema } from '../../utills/yupSchema';
 
-interface AddCategoryProps {
-  onSuccess: () => void;
-}
-
-const AddCategory = ({ onSuccess }: AddCategoryProps) => {
-  const [form, setForm] = useState<Omit<CategoryProps, '_id'>>({
-    name: '',
-    sku: '',
-    description: '',
-  });
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
+const AddCategory = ({ onSuccess, isOpen }: OnSuccessHandlerProps) => {
   const dispatch = useAppDispatch();
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setError('');
-  };
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<Omit<CategoryProps, '_id'>>({
+    defaultValues: {
+      name: '',
+      sku: '',
+      description: '',
+    },
+    resolver: yupResolver(categorySchema),
+  });
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    if (!form.name || !form.sku) {
-      setError('Please fill in all required fields.');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-
+  const onSubmit: SubmitHandler<Omit<CategoryProps, '_id'>> = async (data) => {
     try {
-      const result = await dispatch(addCategory(form));
+      const result = await dispatch(addCategory(data));
       if (addCategory.fulfilled.match(result)) {
         onSuccess();
         toast.success('Category added successfully');
-        setForm({
-          name: '',
-          sku: '',
-          description: '',
-        });
+        reset();
+      } else if (addCategory.rejected.match(result)) {
+        toast.error('Failed to add category');
       }
     } catch (err) {
-      setError('Error adding Category. Please try again.');
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
+  // Reset form when drawer is closed
+  useEffect(() => {
+    if (!isOpen) {
+      reset();
+    }
+  }, [isOpen, reset]);
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Input
         id='name'
-        className='mb-4'
-        name='name'
+        containerClassName='mb-4'
+        requiredLabel
         label='Name'
         placeholder='Name'
-        value={form.name}
-        onChange={handleChange}
-        required
+        error={errors.name?.message}
+        {...register('name')}
       />
 
       <Input
         id='sku'
-        className='mb-4'
+        containerClassName='mb-4'
         label='SKU'
-        name='sku'
+        requiredLabel
         placeholder='SKU'
-        value={form.sku}
-        onChange={handleChange}
-        required
+        {...register('sku')}
+        error={errors.sku?.message}
       />
 
-      <div className='flex flex-col gap-2 mb-4'>
-        <label htmlFor='description' className='font-semibold'>
-          Description
-        </label>
+      <Textarea
+        label='Description'
+        id='description'
+        placeholder='Description'
+        containerClassName='mb-4'
+        {...register('description')}
+      />
 
-        <textarea
-          id='description'
-          name='description'
-          placeholder='Description'
-          className='ring-1 ring-gray-400 p-2 rounded outline-blue-300'
-          value={form.description}
-          onChange={handleChange}
-        />
-      </div>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
       <button
         type='submit'
-        disabled={loading}
+        disabled={isSubmitting}
         className='bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700 cursor-pointer'
       >
-        {loading ? 'Adding...' : 'Add'}
+        {isSubmitting ? 'Adding...' : 'Add'}
       </button>
     </form>
   );

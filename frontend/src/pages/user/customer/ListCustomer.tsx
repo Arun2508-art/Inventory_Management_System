@@ -92,8 +92,9 @@ const ListCustomer = () => {
           </div>
         )}
       </div>
+
       <Drawer title='Add Customer' isOpen={open} onClose={() => setOpen(false)}>
-        <AddCustomer onSuccess={() => setOpen(false)} />
+        <AddCustomer isOpen={open} onSuccess={() => setOpen(false)} />
       </Drawer>
     </>
   );

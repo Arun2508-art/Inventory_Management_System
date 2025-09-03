@@ -114,6 +114,7 @@ export const warehouseSlice = createSlice({
       .addCase(deleteWarehouse.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.isLoading = false;
+        console.log(action.payload);
         state.warehouseList = state.warehouseList.filter(
           (warehouse) => warehouse._id !== action.payload.data._id
         );

@@ -1,143 +1,121 @@
-import { type ChangeEvent, type FormEvent, useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useEffect } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
+import Textarea from '../../components/Textarea';
 import { addWarehouse } from '../../store/slice/warehouseSlice';
 import { useAppDispatch } from '../../utills/reduxHook';
 import type { OnSuccessHandlerProps, warehouseProps } from '../../utills/types';
+import { warehouseSchema } from '../../utills/yupSchema';
 
 const statusData = [
   { value: '', label: 'Please Select status' },
   { value: 'active', label: 'Active' },
-  { value: 'inactive', label: 'In Active' },
+  { value: 'inActive', label: 'In Active' },
 ];
 
-const AddWarehouse = ({ onSuccess }: OnSuccessHandlerProps) => {
-  const [form, setForm] = useState<Omit<warehouseProps, '_id'>>({
-    name: '',
-    contactPerson: '',
-    sku: '',
-    location: '',
-    status: 'active',
-    description: '',
+const AddWarehouse = ({ onSuccess, isOpen }: OnSuccessHandlerProps) => {
+  const dispatch = useAppDispatch();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<Omit<warehouseProps, '_id'>>({
+    defaultValues: {
+      name: '',
+      contactPerson: '',
+      sku: '',
+      location: '',
+      status: 'active',
+      description: '',
+    },
+    resolver: yupResolver(warehouseSchema),
   });
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
-  const dispatch = useAppDispatch();
-
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setError('');
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    if (!form.name || !form.sku) {
-      setError('Please fill in all required fields.');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-
+  const onSubmit: SubmitHandler<Omit<warehouseProps, '_id'>> = async (data) => {
     try {
-      const result = await dispatch(addWarehouse(form));
+      const result = await dispatch(addWarehouse(data));
       if (addWarehouse.fulfilled.match(result)) {
         onSuccess();
         toast.success('Warehouse added successfully');
-        setForm({
-          name: '',
-          contactPerson: '',
-          sku: '',
-          location: '',
-          status: 'active',
-          description: '',
-        });
+        reset;
+      } else if (addWarehouse.rejected.match(result)) {
+        toast.error('Failed to add warehouse');
       }
     } catch (err) {
-      setError('Error adding Warehouse. Please try again.');
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (!isOpen) {
+      reset();
+    }
+  }, [isOpen, reset]);
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Input
         id='name'
-        className='mb-4'
-        name='name'
+        containerClassName='mb-4'
         label='Name'
         placeholder='Name'
-        value={form.name}
-        onChange={handleChange}
-        required
+        requiredLabel
+        {...register('name')}
+        error={errors.name?.message}
       />
       <Input
         id='contactPerson'
-        className='mb-4'
-        name='contactPerson'
+        containerClassName='mb-4'
         label='Contact Person'
         placeholder='Contact Person'
-        value={form.contactPerson}
-        onChange={handleChange}
-        required
+        requiredLabel
+        {...register('contactPerson')}
+        error={errors.contactPerson?.message}
       />
       <Input
         id='sku'
-        className='mb-4'
+        containerClassName='mb-4'
         label='SKU'
-        name='sku'
         placeholder='SKU'
-        value={form.sku}
-        onChange={handleChange}
-        required
+        requiredLabel
+        {...register('sku')}
+        error={errors.sku?.message}
       />
       <Input
         id='location'
-        className='mb-4'
-        name='location'
+        containerClassName='mb-4'
         label='Location'
         placeholder='location'
-        value={form.location}
-        onChange={handleChange}
-        required
+        requiredLabel
+        {...register('location')}
+        error={errors.location?.message}
       />
       <Select
-        name='status'
-        className='mb-4'
+        containerClassname='mb-4'
         id='status'
         label='Status'
         defaultValue='active'
         optionList={statusData}
-        required
+        {...register('status')}
       />
-      <div className='flex flex-col gap-2 mb-4'>
-        <label htmlFor='description' className='font-semibold'>
-          Description
-        </label>
+      <Textarea
+        id='description'
+        label='Description'
+        placeholder='Description'
+        containerClassName='mb-4'
+        {...register('description')}
+      />
 
-        <textarea
-          id='description'
-          name='description'
-          placeholder='Description'
-          className='ring-1 ring-gray-400 p-2 rounded outline-blue-300'
-          value={form.description}
-          onChange={handleChange}
-        />
-      </div>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
       <button
         type='submit'
-        disabled={loading}
+        disabled={isSubmitting}
         className='bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700 cursor-pointer'
       >
-        {loading ? 'Adding...' : 'Add'}
+        {isSubmitting ? 'Adding...' : 'Add'}
       </button>
     </form>
   );

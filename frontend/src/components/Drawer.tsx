@@ -23,7 +23,7 @@ const Drawer = ({ title, isOpen, onClose, children }: DrawerProps) => {
 
       {/* Drawer Panel */}
       <div
-        className={`fixed top-0 bottom-0 right-0 w-full md:w-[400px] bg-white z-50 transform transition-transform duration-300 ${
+        className={`fixed top-0 bottom-0 right-0 w-full md:w-[400px] bg-white z-50 transform transition-transform duration-300 overflow-auto sidebar-scroll ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

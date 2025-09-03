@@ -8,6 +8,7 @@ export type userRole =
 
 export interface OnSuccessHandlerProps {
   onSuccess: () => void;
+  isOpen: boolean;
 }
 
 export interface CategoryProps {
@@ -57,6 +58,6 @@ export interface warehouseProps {
   contactPerson: string;
   sku: string;
   location: string;
-  status?: 'active' | 'inactive' | '';
+  status?: 'active' | 'inActive' | '';
   description?: string;
 }

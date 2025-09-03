@@ -93,7 +93,7 @@ const ListWarehouse = () => {
         isOpen={open}
         onClose={() => setOpen(false)}
       >
-        <AddWarehouse onSuccess={() => setOpen(false)} />
+        <AddWarehouse isOpen={open} onSuccess={() => setOpen(false)} />
       </Drawer>
     </>
   );

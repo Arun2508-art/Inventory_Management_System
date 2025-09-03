@@ -1,120 +1,107 @@
-import { type ChangeEvent, type FormEvent, useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useEffect } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import Input from '../../../components/Input';
+import Textarea from '../../../components/Textarea';
 import { addCustomer } from '../../../store/slice/customerSlice';
 import { useAppDispatch } from '../../../utills/reduxHook';
-import type { CustomerProps } from '../../../utills/types';
+import type {
+  CustomerProps,
+  OnSuccessHandlerProps,
+} from '../../../utills/types';
+import { customerSchema } from '../../../utills/yupSchema';
 
-interface AddCustomerProps {
-  onSuccess: () => void;
-}
-
-const AddCustomer = ({ onSuccess }: AddCustomerProps) => {
-  const [form, setForm] = useState<Omit<CustomerProps, '_id'>>({
-    name: '',
-    phone: '',
-    email: '',
-    address: '',
-  });
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
+const AddCustomer = ({ onSuccess, isOpen }: OnSuccessHandlerProps) => {
   const dispatch = useAppDispatch();
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<Omit<CustomerProps, '_id'>>({
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      address: '',
+    },
+    resolver: yupResolver(customerSchema),
+  });
+
+  const onHandleSubmit: SubmitHandler<Omit<CustomerProps, '_id'>> = async (
+    data
   ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setError('');
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    if (!form.name) {
-      setError('Please fill in all required fields.');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-
+    console.log(data);
     try {
-      const result = await dispatch(addCustomer(form));
+      const result = await dispatch(addCustomer(data));
       if (addCustomer.fulfilled.match(result)) {
         onSuccess();
         toast.success('Customer added successfully');
-        setForm({
-          name: '',
-          phone: '',
-          email: '',
-          address: '',
-        });
+        reset();
+      } else if (addCustomer.rejected.match(result)) {
+        toast.error('Failed to add customer');
       }
     } catch (err) {
-      setError('Error adding Customer. Please try again.');
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (!isOpen) {
+      reset();
+    }
+  }, [isOpen, reset]);
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(onHandleSubmit)}>
       <Input
         id='name'
-        className='mb-4'
-        name='name'
+        containerClassName='mb-4'
         label='Name'
         placeholder='Name'
-        value={form.name}
-        onChange={handleChange}
-        required
+        requiredLabel
+        {...register('name')}
+        error={errors.name?.message}
       />
 
       <Input
         id='email'
-        className='mb-4'
+        containerClassName='mb-4'
         label='Email'
-        name='email'
         placeholder='email'
-        value={form.email}
-        onChange={handleChange}
-        required
+        requiredLabel
+        {...register('email')}
+        error={errors.email?.message}
       />
 
       <Input
         id='phone'
-        className='mb-4'
+        containerClassName='mb-4'
         label='Phone'
-        name='phone'
         placeholder='Phone'
-        value={form.phone}
-        onChange={handleChange}
-        required
+        requiredLabel
+        {...register('phone')}
+        error={errors.phone?.message}
       />
 
-      <div className='flex flex-col gap-2 mb-4'>
-        <label htmlFor='description' className='font-semibold'>
-          Address
-        </label>
+      <Textarea
+        id='address'
+        containerClassName='mb-4'
+        label='Address'
+        placeholder='Address'
+        requiredLabel
+        {...register('address')}
+        error={errors.address?.message}
+      />
 
-        <textarea
-          id='address'
-          name='address'
-          placeholder='Address'
-          className='ring-1 ring-gray-400 p-2 rounded outline-blue-300'
-          value={form.address}
-          onChange={handleChange}
-        />
-      </div>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
       <button
         type='submit'
-        disabled={loading}
+        disabled={isSubmitting}
         className='bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700 cursor-pointer'
       >
-        {loading ? 'Adding...' : 'Add'}
+        {isSubmitting ? 'Adding...' : 'Add'}
       </button>
     </form>
   );
