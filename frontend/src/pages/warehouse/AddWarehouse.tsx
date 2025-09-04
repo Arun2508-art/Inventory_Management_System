@@ -29,7 +29,7 @@ const AddWarehouse = ({ onSuccess, isOpen }: OnSuccessHandlerProps) => {
       contactPerson: '',
       sku: '',
       location: '',
-      status: 'active',
+      status: undefined,
       description: '',
     },
     resolver: yupResolver(warehouseSchema),
@@ -98,9 +98,10 @@ const AddWarehouse = ({ onSuccess, isOpen }: OnSuccessHandlerProps) => {
         containerClassname='mb-4'
         id='status'
         label='Status'
-        defaultValue='active'
+        defaultValue=''
         optionList={statusData}
         {...register('status')}
+        error={errors.status?.message}
       />
       <Textarea
         id='description'

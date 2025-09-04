@@ -79,7 +79,6 @@ const ListStaff = () => {
               columns={columns}
               data={employee}
               showCheckboxes
-              onView={(row) => console.log('View', row)}
               onEdit={(row) => console.log('Edit', row)}
               onDelete={handleDelete}
             />

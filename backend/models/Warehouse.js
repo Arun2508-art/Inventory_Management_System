@@ -14,7 +14,12 @@ const WarehouseSchema = new mongoose.Schema(
     },
     sku: { type: String, unique: true, required: true },
     location: { type: String, required: true },
-    status: { type: String, enum: ['active', 'inActive'], default: 'active' },
+    status: {
+      type: String,
+      enum: ['active', 'inActive'],
+      default: 'active',
+      required: true,
+    },
     description: {
       type: String,
       default: '',

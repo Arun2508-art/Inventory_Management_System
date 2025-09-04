@@ -11,6 +11,7 @@ export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   defaultValue: string;
   optionList: OptionListProp[];
   requiredLabel?: boolean;
+  error?: string;
 }
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
@@ -23,6 +24,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
       defaultValue,
       optionList,
       requiredLabel,
+      error,
       ...props
     },
     ref
@@ -58,6 +60,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             </option>
           ))}
         </select>
+        {error && <div className='text-red-500'>{error}</div>}
       </div>
     );
   }

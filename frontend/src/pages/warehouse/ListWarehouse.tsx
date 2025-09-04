@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import ActionIcons from '../../components/ActionIcons';
+import Badge from '../../components/Badge';
 import Drawer from '../../components/Drawer';
 import Loading from '../../components/Loading';
 import SearchBar from '../../components/SearchBar';
@@ -26,14 +27,32 @@ const columns: Column<warehouseProps>[] = [
           height={30}
           className='rounded-md'
         />
-        <span>{value as string}</span>
+        <span className='capitalize'>{value as string}</span>
       </div>
     ),
   },
-  { key: 'contactPerson', label: 'Contact Person' },
-  { key: 'sku', label: 'Warehouse ID' },
+  {
+    key: 'contactPerson',
+    label: 'Contact Person',
+    render: (value) => <div className='capitalize'>{value}</div>,
+  },
+  {
+    key: 'sku',
+    label: 'Warehouse ID',
+    render: (value) => <div className='capitalize'>{value}</div>,
+  },
   { key: 'location', label: 'Address' },
-  { key: 'status', label: 'Status' },
+  {
+    key: 'status',
+    label: 'Status',
+    render: (value, row) => {
+      return (
+        <Badge variant={row.status} className='capitalize'>
+          {value}
+        </Badge>
+      );
+    },
+  },
   { key: 'description', label: 'Description' },
 ];
 

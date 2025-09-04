@@ -1,19 +1,23 @@
-import { type ChangeEvent, type FormEvent, useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { IconCircleArrowLeft } from '@tabler/icons-react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import Input from '../../../components/Input';
 import Select from '../../../components/Select';
+import Textarea from '../../../components/Textarea';
 import { addEmployee } from '../../../store/slice/employeeSlice';
 import { useAppDispatch } from '../../../utills/reduxHook';
 import type { employeeProps } from '../../../utills/types';
+import { staffSchema } from '../../../utills/yupSchema';
 
 const roleData = [
   { value: '', label: 'Please Select role' },
-  { value: 'manager', label: 'Manager' },
-  { value: 'admin', label: 'Admin' },
-  { value: 'staff', label: 'Staff' },
-  { value: 'warehouse', label: 'Warehouse Staff' },
-  { value: 'sales', label: 'Sales Person' },
+  { value: 'Manager', label: 'Manager' },
+  { value: 'Admin', label: 'Admin' },
+  { value: 'Staff', label: 'Staff' },
+  { value: 'Warehouse', label: 'Warehouse Staff' },
+  { value: 'Sales', label: 'Sales Person' },
 ];
 
 const statusData = [
@@ -24,149 +28,133 @@ const statusData = [
 ];
 
 const AddStaff = () => {
-  const [form, setForm] = useState<Omit<employeeProps, '_id'>>({
-    name: '',
-    phone: '',
-    email: '',
-    address: '',
-    employeeCode: '',
-    role: 'admin',
-  });
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<Omit<employeeProps, '_id'>>({
+    defaultValues: {
+      name: '',
+      phone: '',
+      email: '',
+      address: '',
+      employeeCode: '',
+      role: '',
+      status: '',
+    },
+    resolver: yupResolver(staffSchema),
+  });
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setError('');
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    if (!form.name) {
-      setError('Please fill in all required fields.');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-
+  const onSubmit: SubmitHandler<Omit<employeeProps, '_id'>> = async (data) => {
     try {
-      const result = await dispatch(addEmployee(form));
+      const result = await dispatch(addEmployee(data));
       if (addEmployee.fulfilled.match(result)) {
         toast.success('Employee added successfully');
-        setForm({
-          name: '',
-          phone: '',
-          email: '',
-          address: '',
-          employeeCode: '',
-          role: 'staff',
-        });
+        reset;
         navigate('/user/staff');
+      } else if (addEmployee.rejected.match(result)) {
+        toast.error('Failed to add employee');
       }
     } catch (err) {
-      setError('Error adding Employee. Please try again.');
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
     <div className='w-full min-h-[calc(100vh-72px)] bg-blue-50 p-4'>
-      <h2 className='font-semibold text-xl mb-4'>Add Employee</h2>
+      <div className='flex gap-2 items-center mb-4'>
+        <div>
+          <IconCircleArrowLeft
+            width={24}
+            height={24}
+            className='text-blue-500 hover:text-blue-800 cursor-pointer'
+            onClick={() => navigate('/user/staff')}
+          />
+        </div>
+        <h2 className='font-semibold text-xl mb-1'>Add Staff</h2>
+      </div>
+
       <div className='bg-white rounded-md p-4'>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className='flex gap-4 flex-wrap mb-4'>
             <Input
               id='name'
-              name='name'
               label='Name'
               placeholder='Name'
-              value={form.name}
-              onChange={handleChange}
-              required
+              requiredLabel
+              {...register('name')}
+              error={errors.name?.message}
             />
             <Input
               id='email'
               label='Email'
-              name='email'
               placeholder='email'
-              value={form.email}
-              onChange={handleChange}
-              required
+              requiredLabel
+              {...register('email')}
+              error={errors.email?.message}
             />
           </div>
           <div className='flex gap-4 flex-wrap mb-4'>
             <Input
               id='employeeCode'
               label='Employee ID'
-              name='employeeCode'
               placeholder='Employee ID'
-              value={form.employeeCode}
-              onChange={handleChange}
-              required
+              requiredLabel
+              {...register('employeeCode')}
+              error={errors.employeeCode?.message}
             />
             <Input
               id='phone'
               label='Phone'
-              name='phone'
               placeholder='Phone'
-              value={form.phone}
-              onChange={handleChange}
-              required
+              requiredLabel
+              {...register('phone')}
+              error={errors.phone?.message}
             />
           </div>
 
           <div className='flex gap-4 flex-wrap mb-4'>
             <Select
-              name='role'
               id='role'
               label='Role'
               defaultValue=''
               optionList={roleData}
-              required
+              requiredLabel
+              {...register('role')}
+              error={errors.role?.message}
             />
 
             <Select
-              name='status'
               id='status'
               label='Status'
               defaultValue=''
               optionList={statusData}
-              required
+              requiredLabel
+              {...register('status')}
+              error={errors.status?.message}
             />
           </div>
 
-          <div className='flex flex-col gap-2 mb-4'>
-            <label htmlFor='description' className='font-semibold'>
-              Address
-            </label>
+          <Textarea
+            containerClassName='mb-4'
+            id='address'
+            label='Address'
+            placeholder='Address'
+            {...register('address')}
+            error={errors.address?.message}
+          />
 
-            <textarea
-              id='address'
-              name='address'
-              placeholder='Address'
-              className='ring-1 ring-gray-400 p-2 rounded outline-blue-300'
-              value={form.address}
-              onChange={handleChange}
-            />
-          </div>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
           <button
             type='submit'
-            disabled={loading}
+            disabled={isSubmitting}
             className='bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700 cursor-pointer'
           >
-            {loading ? 'Adding...' : 'Add'}
+            {isSubmitting ? 'Adding...' : 'Add'}
           </button>
-        </form>{' '}
+        </form>
       </div>
     </div>
   );

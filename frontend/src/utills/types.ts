@@ -1,9 +1,9 @@
 export type userRole =
-  | 'admin'
-  | 'manager'
-  | 'staff'
-  | 'warehouse'
-  | 'sales'
+  | 'Admin'
+  | 'Manager'
+  | 'Staff'
+  | 'Warehouse'
+  | 'Sales'
   | '';
 
 export interface OnSuccessHandlerProps {
@@ -28,11 +28,11 @@ export interface employeeProps {
   address: string;
 
   department?: string; // e.g. 'Inventory', 'Sales', 'Logistics'
-  status?: 'active' | 'inactive' | 'onLeave';
+  status: '' | 'active' | 'inactive' | 'onLeave';
   // Permissions (example)
-  canManageInventory?: boolean;
-  canProcessOrders?: boolean;
-  canManageSuppliers?: boolean;
+  // canManageInventory?: boolean;
+  // canProcessOrders?: boolean;
+  // canManageSuppliers?: boolean;
 }
 
 export interface SupplierProps {
@@ -58,6 +58,6 @@ export interface warehouseProps {
   contactPerson: string;
   sku: string;
   location: string;
-  status?: 'active' | 'inActive' | '';
+  status: 'active' | 'inActive';
   description?: string;
 }
