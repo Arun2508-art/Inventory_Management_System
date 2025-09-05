@@ -11,6 +11,17 @@ export interface OnSuccessHandlerProps {
   isOpen: boolean;
 }
 
+export interface ProductProps {
+  _id: string;
+  name: string;
+  sku: string;
+  category?: Pick<CategoryProps, '_id' | 'name'> | string;
+  price?: number;
+  quantity?: number;
+  supplier?: Pick<SupplierProps, '_id' | 'name'> | string;
+  description?: string;
+}
+
 export interface CategoryProps {
   _id: string;
   name: string;

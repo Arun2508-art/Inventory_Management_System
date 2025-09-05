@@ -12,6 +12,7 @@ export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   optionList: OptionListProp[];
   requiredLabel?: boolean;
   error?: string;
+  optionLabel?: string;
 }
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
@@ -25,6 +26,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
       optionList,
       requiredLabel,
       error,
+      optionLabel,
       ...props
     },
     ref
@@ -54,6 +56,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           defaultValue={defaultValue}
           {...props}
         >
+          <option value=''>{optionLabel ?? 'Please select one value'}</option>
           {optionList.map((item) => (
             <option key={item.value} value={item.value}>
               {item.label}

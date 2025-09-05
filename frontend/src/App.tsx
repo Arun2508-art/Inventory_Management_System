@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router';
 import './App.css';
 import MainLayout from './layouts/MainLayout';
+import Billing from './pages/Billing';
 import ListCategory from './pages/category/ListCategory';
 import HomePage from './pages/HomePage';
 import AddProduct from './pages/product/AddProduct';
@@ -26,6 +27,7 @@ function App() {
           <Route path='suppliers' element={<ListSupplier />} />
         </Route>
         <Route path='warehouses' element={<ListWarehouse />} />
+        <Route path='billing' element={<Billing />} />
       </Route>
     </Routes>
   );

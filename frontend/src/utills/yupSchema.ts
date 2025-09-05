@@ -3,9 +3,33 @@ import type {
   CategoryProps,
   CustomerProps,
   employeeProps,
+  ProductProps,
   SupplierProps,
   warehouseProps,
 } from './types';
+
+export const productSchema: yup.ObjectSchema<Omit<ProductProps, '_id'>> =
+  yup.object({
+    name: yup.string().required('Please enter name'),
+    sku: yup.string().required(),
+    category: yup.string().optional(),
+    price: yup
+      .number()
+      .transform((value, originValue) =>
+        originValue === '' ? undefined : value
+      )
+      .typeError('Price must be a number')
+      .optional(),
+    quantity: yup
+      .number()
+      .transform((value, originValue) =>
+        originValue === '' ? undefined : value
+      )
+      .typeError('Quantity must be a number')
+      .optional(),
+    supplier: yup.string().optional(),
+    description: yup.string().optional(),
+  });
 
 export const categorySchema: yup.ObjectSchema<Omit<CategoryProps, '_id'>> =
   yup.object({

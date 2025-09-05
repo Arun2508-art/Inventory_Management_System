@@ -12,7 +12,6 @@ import type { employeeProps } from '../../../utills/types';
 import { staffSchema } from '../../../utills/yupSchema';
 
 const roleData = [
-  { value: '', label: 'Please Select role' },
   { value: 'Manager', label: 'Manager' },
   { value: 'Admin', label: 'Admin' },
   { value: 'Staff', label: 'Staff' },
@@ -21,7 +20,6 @@ const roleData = [
 ];
 
 const statusData = [
-  { value: '', label: 'Please Select status' },
   { value: 'active', label: 'Active' },
   { value: 'inactive', label: 'In Active' },
   { value: 'onLeave', label: 'On Leave' },
@@ -121,6 +119,7 @@ const AddStaff = () => {
               id='role'
               label='Role'
               defaultValue=''
+              optionLabel='Please Select role'
               optionList={roleData}
               requiredLabel
               {...register('role')}
@@ -132,6 +131,7 @@ const AddStaff = () => {
               label='Status'
               defaultValue=''
               optionList={statusData}
+              optionLabel='Please Select status'
               requiredLabel
               {...register('status')}
               error={errors.status?.message}

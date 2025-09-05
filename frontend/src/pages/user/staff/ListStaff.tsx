@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import ActionIcons from '../../../components/ActionIcons';
+import Container from '../../../components/Container';
 import Loading from '../../../components/Loading';
 import SearchBar from '../../../components/SearchBar';
 import type { Column } from '../../../components/Table1';
@@ -54,9 +55,7 @@ const ListStaff = () => {
   }, [dispatch]);
 
   return (
-    <div className='w-full min-h-[calc(100vh-72px)] bg-blue-50 p-4'>
-      <h2 className='font-semibold text-xl mb-4'>Employee's</h2>
-
+    <Container title="Employee's">
       {isLoading ? (
         <Loading />
       ) : error ? (
@@ -64,9 +63,7 @@ const ListStaff = () => {
       ) : (
         <div className='bg-blue-100 rounded-md shadow-md'>
           <div className='flex justify-between items-center gap-4 px-4 py-3 mb-1'>
-            <div>
-              <SearchBar />
-            </div>
+            <SearchBar />
             <ActionIcons addLink />
           </div>
 
@@ -85,7 +82,7 @@ const ListStaff = () => {
           )}
         </div>
       )}
-    </div>
+    </Container>
   );
 };
 

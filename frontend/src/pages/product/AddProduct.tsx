@@ -1,75 +1,80 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { IconCircleArrowLeft } from '@tabler/icons-react';
-import axios from 'axios';
-import { type ChangeEvent, type FormEvent, useState } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
 import Input from '../../components/Input';
-
-interface ProductForm {
-  name: string;
-  sku: string;
-  category: string;
-  price: string;
-  quantity: string;
-  description: string;
-  supplier: string;
-}
+import Select from '../../components/Select';
+import Textarea from '../../components/Textarea';
+import {
+  addProduct,
+  fetchCategorySupplier,
+} from '../../store/slice/productSlice';
+import { useAppDispatch, useAppSelector } from '../../utills/reduxHook';
+import type { ProductProps } from '../../utills/types';
+import { productSchema } from '../../utills/yupSchema';
 
 const AddProduct = () => {
-  const [form, setForm] = useState<ProductForm>({
-    name: '',
-    sku: '',
-    category: '',
-    price: '',
-    quantity: '',
-    description: '',
-    supplier: '',
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { categoryOption, supplierOption } = useAppSelector(
+    (state) => state.productData
+  );
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<Omit<ProductProps, '_id'>>({
+    defaultValues: {
+      name: '',
+      sku: '',
+      category: '',
+      price: undefined,
+      quantity: undefined,
+      description: '',
+      supplier: '',
+    },
+    resolver: yupResolver(productSchema),
   });
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
-  const navigate = useNavigate();
-
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setError('');
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    if (!form.name || !form.sku || !form.price) {
-      setError('Please fill in all required fields.');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-
+  const onSubmit: SubmitHandler<Omit<ProductProps, '_id'>> = async (data) => {
+    console.log('fghgfhfg', data);
     try {
-      await axios.post('http://localhost:5000/api/products', {
-        ...form,
-        price: parseFloat(form.price),
-        quantity: parseInt(form.quantity, 10) || 0,
-      });
-      alert('Product added successfully');
-      setForm({
-        name: '',
-        sku: '',
-        category: '',
-        price: '',
-        quantity: '',
-        description: '',
-        supplier: '',
-      });
+      const result = await dispatch(addProduct(data));
+      if (addProduct.fulfilled.match(result)) {
+        toast.success('Product added successfully');
+        reset();
+        navigate('/products');
+      } else if (addProduct.rejected.match(result)) {
+        toast.error('Failed to add product');
+      }
     } catch (err) {
-      setError('Error adding product. Please try again.');
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
+
+  const supplierData = useMemo(
+    () =>
+      supplierOption.map((item) => ({
+        value: item._id,
+        label: item.name,
+      })),
+    [supplierOption]
+  );
+  const categorydata = useMemo(
+    () =>
+      categoryOption.map((item) => ({
+        value: item._id,
+        label: item.name,
+      })),
+    [categoryOption]
+  );
+
+  useEffect(() => {
+    dispatch(fetchCategorySupplier());
+  }, [dispatch]);
 
   return (
     <div className='w-full min-h-[calc(100vh-72px)] bg-blue-50 p-4'>
@@ -85,92 +90,78 @@ const AddProduct = () => {
         <h2 className='font-semibold text-xl mb-1'>Add Product</h2>
       </div>
       <div className='bg-white rounded-md p-4'>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className='flex gap-4 flex-wrap mb-4'>
             <Input
               id='name'
-              name='name'
               label='Name'
               placeholder='Name'
-              value={form.name}
-              onChange={handleChange}
-              required
+              requiredLabel
+              {...register('name')}
+              error={errors.name?.message}
             />
-
             <Input
               id='sku'
               label='SKU'
-              name='sku'
               placeholder='SKU'
-              value={form.sku}
-              onChange={handleChange}
-              required
+              requiredLabel
+              {...register('sku')}
+              error={errors.sku?.message}
             />
           </div>
           <div className='flex gap-4 flex-wrap mb-4'>
-            <Input
-              label='Category ID'
+            <Select
+              containerClassname='mb-4'
+              label='Category'
               id='category'
-              name='category'
-              placeholder='Category ID'
-              value={form.category}
-              onChange={handleChange}
+              defaultValue=''
+              optionLabel='Please select the category'
+              optionList={categorydata}
+              {...register('category')}
+              error={errors.category?.message}
             />
-
             <Input
               label='Price'
               id='price'
-              name='price'
-              type='number'
               placeholder='Price'
-              step='0.01'
-              value={form.price}
-              onChange={handleChange}
-              required
+              {...register('price')}
+              error={errors.price?.message}
             />
           </div>
           <div className='flex gap-4 flex-wrap mb-4'>
             <Input
               label='Quantity'
               id='quantity'
-              name='quantity'
-              type='number'
               placeholder='Quantity'
-              value={form.quantity}
-              onChange={handleChange}
+              {...register('quantity')}
+              error={errors.quantity?.message}
             />
-
-            <Input
-              label='Supplier ID'
+            <Select
+              containerClassname='mb-4'
               id='supplier'
-              className='ring-1 ring-gray-400 rounded p-2'
-              name='supplier'
-              placeholder='Supplier ID'
-              value={form.supplier}
-              onChange={handleChange}
+              label='Supplier'
+              defaultValue=''
+              optionLabel='Please select the Supplier'
+              optionList={supplierData}
+              {...register('supplier')}
+              error={errors.supplier?.message}
             />
           </div>
-          <div className='flex flex-col gap-2 mb-4'>
-            <label htmlFor='description' className='font-semibold'>
-              Description
-            </label>
+          <Textarea
+            id='description'
+            label='Description'
+            placeholder='Description'
+            containerClassName='mb-4'
+            {...register('description')}
+            error={errors.description?.message}
+          />
 
-            <textarea
-              id='description'
-              name='description'
-              placeholder='Description'
-              className='ring-1 ring-gray-400 p-2 rounded outline-blue-300'
-              value={form.description}
-              onChange={handleChange}
-            />
-          </div>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
           <button
             type='submit'
-            disabled={loading}
+            disabled={isSubmitting}
             className='bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700 cursor-pointer'
           >
-            {loading ? 'Adding...' : 'Add Product'}
+            {isSubmitting ? 'Adding...' : 'Add'}
           </button>
         </form>
       </div>

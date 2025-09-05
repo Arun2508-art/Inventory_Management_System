@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import ActionIcons from '../../components/ActionIcons';
 import Badge from '../../components/Badge';
+import Container from '../../components/Container';
 import Drawer from '../../components/Drawer';
 import Loading from '../../components/Loading';
 import SearchBar from '../../components/SearchBar';
@@ -76,9 +77,7 @@ const ListWarehouse = () => {
 
   return (
     <>
-      <div className='w-full min-h-[calc(100vh-72px)] bg-blue-50 p-4'>
-        <h2 className='font-semibold text-xl mb-4'>Warehouse's</h2>
-
+      <Container title="Warehouse's">
         {isLoading ? (
           <Loading />
         ) : error ? (
@@ -105,7 +104,7 @@ const ListWarehouse = () => {
             )}
           </div>
         )}
-      </div>
+      </Container>
 
       <Drawer
         title='Add Warehouse'

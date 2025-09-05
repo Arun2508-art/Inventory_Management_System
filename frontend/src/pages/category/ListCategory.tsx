@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import ActionIcons from '../../components/ActionIcons';
+import Container from '../../components/Container';
 import Drawer from '../../components/Drawer';
 import Loading from '../../components/Loading';
 import Pagination from '../../components/Pagination';
@@ -66,9 +67,7 @@ const ListCategory = () => {
 
   return (
     <>
-      <div className='w-full min-h-[calc(100vh-72px)] bg-blue-50 p-4'>
-        <h2 className='font-semibold text-xl mb-4'>Categories</h2>
-
+      <Container title='Categories'>
         {isLoading ? (
           <Loading />
         ) : error ? (
@@ -121,7 +120,7 @@ const ListCategory = () => {
             )}
           </div>
         )}
-      </div>
+      </Container>
 
       <Drawer title='Add Category' isOpen={open} onClose={() => setOpen(false)}>
         <AddCategory isOpen={open} onSuccess={() => setOpen(false)} />

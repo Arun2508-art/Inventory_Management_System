@@ -3,7 +3,6 @@ const Employee = require('../models/Employee');
 const fetchEmployee = async (req, res) => {
   try {
     const allEmployee = await Employee.find();
-    console.log(allEmployee);
     return res.status(200).json({
       success: true,
       data: allEmployee,

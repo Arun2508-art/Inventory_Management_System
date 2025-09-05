@@ -1,4 +1,6 @@
 const Product = require('../models/Product');
+const Category = require('../models/Category');
+const Supplier = require('../models/Supplier');
 
 // GET all products
 const fetchAllProduct = async (req, res) => {
@@ -6,9 +8,12 @@ const fetchAllProduct = async (req, res) => {
     const products = await Product.find()
       .populate('category', 'name')
       .populate('supplier', 'name');
-    res.json(products);
+    return res.json({
+      success: true,
+      data: products,
+    });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -25,12 +30,11 @@ const addProduct = async (req, res) => {
     description,
     supplier,
   });
-
   try {
     const newProduct = await product.save();
-    res.status(201).json(newProduct);
+    return res.status(201).json({ success: true, data: newProduct });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 
@@ -52,10 +56,31 @@ const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) return res.status(404).json({ message: 'Product not found' });
-    res.json({ message: 'Product deleted' });
+    res.json({ success: true, message: 'Product deleted', data: product });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
-module.exports = { fetchAllProduct, addProduct, updateProduct, deleteProduct };
+// get category and supplier
+const fetchCategorySupplier = async (req, res) => {
+  try {
+    const category = await Category.find({}, 'name');
+    const supplier = await Supplier.find({}, 'name');
+    return res.json({
+      success: true,
+      category,
+      supplier,
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+module.exports = {
+  fetchAllProduct,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+  fetchCategorySupplier,
+};

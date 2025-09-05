@@ -11,7 +11,6 @@ import type { OnSuccessHandlerProps, warehouseProps } from '../../utills/types';
 import { warehouseSchema } from '../../utills/yupSchema';
 
 const statusData = [
-  { value: '', label: 'Please Select status' },
   { value: 'active', label: 'Active' },
   { value: 'inActive', label: 'In Active' },
 ];
@@ -99,6 +98,7 @@ const AddWarehouse = ({ onSuccess, isOpen }: OnSuccessHandlerProps) => {
         id='status'
         label='Status'
         defaultValue=''
+        optionLabel='Please Select status'
         optionList={statusData}
         {...register('status')}
         error={errors.status?.message}

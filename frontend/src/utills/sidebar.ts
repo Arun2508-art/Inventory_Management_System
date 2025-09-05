@@ -14,14 +14,16 @@ export const menuItems = [
           { label: 'Suppliers', href: '/user/suppliers' },
         ],
       },
+      { icon: '/file-invoice.svg', label: 'Billing', href: '/billing' },
       { icon: '/warehouse.svg', label: 'Warehouses', href: '/warehouses' },
-
       {
-        icon: '/home.svg',
-        label: 'Purchase Orders',
-        href: '/purchase-orders',
+        icon: '/report.svg',
+        label: 'Orders',
+        options: [
+          { label: 'Sales Orders', href: '/order/sales' },
+          { label: 'Purchase Orders', href: '/order/purchase' },
+        ],
       },
-      { icon: '/home.svg', label: 'Sales Orders', href: '/sales-orders' },
       {
         icon: '/home.svg',
         label: 'Stock Transactions',
