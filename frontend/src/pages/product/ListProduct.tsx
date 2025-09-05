@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import ActionIcons from '../../components/ActionIcons';
 import Container from '../../components/Container';
@@ -7,6 +7,7 @@ import SearchBar from '../../components/SearchBar';
 import type { Column } from '../../components/Table1';
 import Table1 from '../../components/Table1';
 import { deleteProduct, fetchProducts } from '../../store/slice/productSlice';
+import { porductFIlter } from '../../utills/filterData';
 import { useAppDispatch, useAppSelector } from '../../utills/reduxHook';
 import type { ProductProps } from '../../utills/types';
 
@@ -57,6 +58,7 @@ const columns: Column<ProductProps>[] = [
 ];
 
 const ListProduct = () => {
+  const [filterText, setFilterText] = useState('Name');
   const dispatch = useAppDispatch();
   const { products, isLoading } = useAppSelector((state) => state.productData);
 
@@ -80,8 +82,13 @@ const ListProduct = () => {
       ) : (
         <div className='bg-blue-100 rounded-md shadow-md'>
           <div className='flex justify-between items-center gap-4 px-4 py-3 mb-1'>
-            <SearchBar />
-            <ActionIcons addLink />
+            <SearchBar placeholder={filterText} />
+            <ActionIcons
+              addLink
+              filter={porductFIlter}
+              selectedFilter={filterText}
+              setSelectedFilter={setFilterText}
+            />
           </div>
           {products.length === 0 ? (
             <p className='h-[calc(100vh-210px)] flex justify-center items-center'>

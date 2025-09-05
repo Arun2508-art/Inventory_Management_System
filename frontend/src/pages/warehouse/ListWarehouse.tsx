@@ -11,6 +11,7 @@ import {
   deleteWarehouse,
   fetchWarehouses,
 } from '../../store/slice/warehouseSlice';
+import { warehouseFilter } from '../../utills/filterData';
 import { useAppDispatch, useAppSelector } from '../../utills/reduxHook';
 import type { warehouseProps } from '../../utills/types';
 import AddWarehouse from './AddWarehouse';
@@ -59,6 +60,7 @@ const columns: Column<warehouseProps>[] = [
 
 const ListWarehouse = () => {
   const [open, setOpen] = useState(false);
+  const [filterText, setFilterText] = useState('Name');
   const dispatch = useAppDispatch();
   const { warehouseList, isLoading, error } = useAppSelector(
     (state) => state.warehouseData
@@ -85,8 +87,13 @@ const ListWarehouse = () => {
         ) : (
           <div className='bg-blue-100 rounded-md shadow-md'>
             <div className='flex justify-between items-center gap-4 px-4 py-3 mb-1'>
-              <SearchBar />
-              <ActionIcons onAdd={() => setOpen(true)} />
+              <SearchBar placeholder={filterText} />
+              <ActionIcons
+                onAdd={() => setOpen(true)}
+                filter={warehouseFilter}
+                selectedFilter={filterText}
+                setSelectedFilter={setFilterText}
+              />
             </div>
 
             {warehouseList.length === 0 ? (

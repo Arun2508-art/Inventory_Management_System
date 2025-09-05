@@ -11,6 +11,7 @@ import {
   deleteCategory,
   fetchAllCategory,
 } from '../../store/slice/categorySlice';
+import { catergoryFilter } from '../../utills/filterData';
 import { useAppDispatch, useAppSelector } from '../../utills/reduxHook';
 import type { CategoryProps } from '../../utills/types';
 import AddCategory from './AddCategory';
@@ -18,7 +19,7 @@ import AddCategory from './AddCategory';
 const columns: Column<CategoryProps>[] = [
   {
     key: 'name',
-    label: 'Category Name',
+    label: 'Name',
     render: (value) => (
       <div className='flex gap-2 items-center'>
         <img
@@ -38,6 +39,7 @@ const columns: Column<CategoryProps>[] = [
 
 const ListCategory = () => {
   const [open, setOpen] = useState(false);
+  const [filterText, setFilterText] = useState('Name');
   const dispatch = useAppDispatch();
   const { categoryList, isLoading, error } = useAppSelector(
     (state) => state.categoryData
@@ -75,20 +77,13 @@ const ListCategory = () => {
         ) : (
           <div className='bg-blue-100 rounded-md shadow-md'>
             <div className='flex justify-between items-center gap-4 px-4 py-3 mb-1'>
-              <div>
-                <SearchBar />
-              </div>
-              {/* <div className='flex gap-3 items-center'>
-                <IconFilter2 className='text-blue-600 hover:text-blue-900 cursor-pointer' />
-
-                <IconCirclePlus
-                  className='text-green-600 hover:text-green-900 cursor-pointer'
-                  onClick={() => setOpen(true)}
-                />
-
-                <IconFileDownload className='text-orange-600 hover:text-orange-900 cursor-pointer' />
-              </div> */}
-              <ActionIcons onAdd={() => setOpen(true)} />
+              <SearchBar placeholder={filterText} />
+              <ActionIcons
+                onAdd={() => setOpen(true)}
+                filter={catergoryFilter}
+                selectedFilter={filterText}
+                setSelectedFilter={setFilterText}
+              />
             </div>
 
             {currentPageItems.length === 0 ? (

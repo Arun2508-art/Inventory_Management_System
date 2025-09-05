@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import ActionIcons from '../../../components/ActionIcons';
 import Container from '../../../components/Container';
@@ -10,6 +10,7 @@ import {
   deleteEmployee,
   fetchEmployee,
 } from '../../../store/slice/employeeSlice';
+import { employeeFIlter } from '../../../utills/filterData';
 import { useAppDispatch, useAppSelector } from '../../../utills/reduxHook';
 import type { employeeProps } from '../../../utills/types';
 
@@ -38,6 +39,7 @@ const columns: Column<employeeProps>[] = [
 ];
 
 const ListStaff = () => {
+  const [filterText, setFilterText] = useState('Name');
   const dispatch = useAppDispatch();
   const { employee, isLoading, error } = useAppSelector(
     (state) => state.employeeData
@@ -63,8 +65,13 @@ const ListStaff = () => {
       ) : (
         <div className='bg-blue-100 rounded-md shadow-md'>
           <div className='flex justify-between items-center gap-4 px-4 py-3 mb-1'>
-            <SearchBar />
-            <ActionIcons addLink />
+            <SearchBar placeholder={filterText} />
+            <ActionIcons
+              addLink
+              filter={employeeFIlter}
+              selectedFilter={filterText}
+              setSelectedFilter={setFilterText}
+            />
           </div>
 
           {employee.length === 0 ? (

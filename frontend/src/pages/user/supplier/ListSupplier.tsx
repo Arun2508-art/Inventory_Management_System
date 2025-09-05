@@ -10,6 +10,7 @@ import {
   deleteSupplier,
   fetchSuppliers,
 } from '../../../store/slice/supplierSlice';
+import { supplierFIlter } from '../../../utills/filterData';
 import { useAppDispatch, useAppSelector } from '../../../utills/reduxHook';
 import type { SupplierProps } from '../../../utills/types';
 import AddSupplier from './AddSupplier';
@@ -39,6 +40,7 @@ const columns: Column<SupplierProps>[] = [
 
 const ListSupplier = () => {
   const [open, setOpen] = useState(false);
+  const [filterText, setFilterText] = useState('Name');
   const dispatch = useAppDispatch();
   const { suppliers, isLoading, error } = useAppSelector(
     (state) => state.supplierData
@@ -65,10 +67,13 @@ const ListSupplier = () => {
         ) : (
           <div className='bg-blue-100 rounded-md shadow-md'>
             <div className='flex justify-between items-center gap-4 px-4 py-3 mb-1'>
-              <div>
-                <SearchBar />
-              </div>
-              <ActionIcons onAdd={() => setOpen(true)} />
+              <SearchBar placeholder={filterText} />
+              <ActionIcons
+                onAdd={() => setOpen(true)}
+                filter={supplierFIlter}
+                selectedFilter={filterText}
+                setSelectedFilter={setFilterText}
+              />
             </div>
             {suppliers.length === 0 ? (
               <p className='h-[calc(100vh-210px)] flex justify-center items-center'>

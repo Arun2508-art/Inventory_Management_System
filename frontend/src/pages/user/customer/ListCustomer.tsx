@@ -11,6 +11,7 @@ import {
   deleteCustomer,
   fetchCustomers,
 } from '../../../store/slice/customerSlice';
+import { customerFilter } from '../../../utills/filterData';
 import { useAppDispatch, useAppSelector } from '../../../utills/reduxHook';
 import type { CustomerProps } from '../../../utills/types';
 import AddCustomer from './AddCustomer';
@@ -18,7 +19,7 @@ import AddCustomer from './AddCustomer';
 const columns: Column<CustomerProps>[] = [
   {
     key: 'name',
-    label: 'Category Name',
+    label: 'Name',
     render: (value) => (
       <div className='flex gap-2 items-center'>
         <img
@@ -39,6 +40,7 @@ const columns: Column<CustomerProps>[] = [
 
 const ListCustomer = () => {
   const [open, setOpen] = useState(false);
+  const [filterText, setFilterText] = useState('Name');
   const dispatch = useAppDispatch();
   const { customers, isLoading, error } = useAppSelector(
     (state) => state.customerData
@@ -65,12 +67,13 @@ const ListCustomer = () => {
         ) : (
           <div className='bg-blue-100 rounded-md shadow-md'>
             <div className='flex justify-between items-center gap-4 px-4 py-3 mb-1'>
-              <div>
-                <SearchBar />
-              </div>
+              <SearchBar placeholder={filterText} />
               <ActionIcons
                 onAdd={() => setOpen(true)}
                 onDownload={() => console.log('delete')}
+                filter={customerFilter}
+                selectedFilter={filterText}
+                setSelectedFilter={setFilterText}
               />
             </div>
 
