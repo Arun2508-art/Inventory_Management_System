@@ -20,6 +20,7 @@ const columns: Column<CategoryProps>[] = [
   {
     key: 'name',
     label: 'Name',
+    sort: true,
     render: (value) => (
       <div className='flex gap-2 items-center'>
         <img

@@ -1,9 +1,20 @@
-import { IconEdit, IconEye, IconTrashX } from '@tabler/icons-react';
+import {
+  IconEdit,
+  IconEye,
+  IconSortAscending2,
+  IconSortAscending2Filled,
+  IconSortDescending2Filled,
+  IconTrashX,
+} from '@tabler/icons-react';
+import { useState } from 'react';
 import Checkbox from './Checkbox';
+
+export type SortTypes = 'asc' | 'desc' | 'default';
 
 export interface Column<T> {
   key: keyof T;
   label: string;
+  sort?: boolean;
   render?: (value: T[keyof T], row: T) => React.ReactNode;
 }
 
@@ -24,6 +35,16 @@ const Table1 = <T,>({
   onEdit,
   onDelete,
 }: TableProps<T>) => {
+  const [sortDirection, setSortDirection] = useState<SortTypes>('default');
+
+  const handleSort = () => {
+    setSortDirection((prev) => {
+      if (prev === 'default') return 'asc';
+      if (prev === 'asc') return 'desc';
+      return 'default';
+    });
+  };
+
   return (
     <div className='overflow-x-auto max-w-full rounded-b-md'>
       <table className='table-fixed border-collapse bg-white min-w-full'>
@@ -36,7 +57,30 @@ const Table1 = <T,>({
             )}
             {columns.map((col) => (
               <th key={String(col.key)} className='text-left font-medium px-3'>
-                {col.label}
+                {col.sort ? (
+                  <div className='flex gap-2 items-center'>
+                    <span>{col.label}</span>
+                    <div className='cursor-pointer' onClick={handleSort}>
+                      {sortDirection === 'default' ? (
+                        <IconSortAscending2 width={20} height={20} />
+                      ) : sortDirection === 'asc' ? (
+                        <IconSortAscending2Filled
+                          width={20}
+                          height={20}
+                          className='text-red-500'
+                        />
+                      ) : (
+                        <IconSortDescending2Filled
+                          width={20}
+                          height={20}
+                          className='text-red-800'
+                        />
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  col.label
+                )}
               </th>
             ))}
             {(onView || onEdit || onDelete) && (

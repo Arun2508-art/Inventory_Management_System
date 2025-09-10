@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
 import { toast } from 'react-toastify';
+import Button from '../components/Button';
 import Container from '../components/Container';
 import type { Column } from '../components/Table1';
 import Table1 from '../components/Table1';
@@ -108,8 +109,6 @@ const Billing = () => {
     dispatch(fetchBillingAllProducts());
   }, [dispatch]);
 
-  console.log(filterData);
-
   return (
     <Container title='Billing'>
       <div className='relative'>
@@ -208,8 +207,20 @@ const Billing = () => {
         </tbody>
       </table> */}
 
-      <div className='mt-4 font-semibold text-right mr-4'>
-        Total Amount: ${totalAmount.toFixed(2)}
+      <div className='flex flex-col gap-3 mr-4 mt-6'>
+        <div className='font-semibold text-right'>
+          Subtotal: ${totalAmount.toFixed(2)}
+        </div>
+
+        <div className='font-semibold text-right'>GST: $50</div>
+
+        <div className='font-semibold text-right'>
+          Total Amount: ${(totalAmount + 50).toFixed(2)}
+        </div>
+
+        <div className='flex justify-end'>
+          <Button variant='secondary'>Check out</Button>
+        </div>
       </div>
     </Container>
   );
