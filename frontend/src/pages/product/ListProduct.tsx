@@ -15,14 +15,14 @@ const columns: Column<ProductProps>[] = [
   {
     key: 'name',
     label: 'Product Info',
-    render: (value) => (
+    render: (value, row) => (
       <div className='flex gap-2 items-center'>
         <img
-          src={'/images/logo.png'}
+          src={row.image || 'noAvatar.png'}
           alt=''
-          width={30}
-          height={30}
-          className='rounded-md'
+          width={40}
+          height={40}
+          className='rounded-md object-cover'
         />
         <span className='capitalize'>{value as string}</span>
       </div>
@@ -42,9 +42,23 @@ const columns: Column<ProductProps>[] = [
   {
     key: 'price',
     label: 'Price',
-    render: (val) => `$${(val as number).toFixed(2)}`,
+    render: (val) =>
+      val === null ? (
+        <div className='text-center'>-</div>
+      ) : (
+        `$${(val as number).toFixed(2)}`
+      ),
   },
-  { key: 'quantity', label: 'Qty' },
+  {
+    key: 'quantity',
+    label: 'Qty',
+    render: (val) =>
+      val === null ? (
+        <div className='text-center'>-</div>
+      ) : (
+        `$${(val as number).toFixed(2)}`
+      ),
+  },
   {
     key: 'supplier',
     label: 'Supplier',

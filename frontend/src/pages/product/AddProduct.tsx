@@ -1,9 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { IconCircleArrowLeft } from '@tabler/icons-react';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
+import ImageUpload from '../../components/ImageUpload';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import Textarea from '../../components/Textarea';
@@ -16,6 +17,7 @@ import type { ProductProps } from '../../utills/types';
 import { productSchema } from '../../utills/yupSchema';
 
 const AddProduct = () => {
+  const [uploadedImageUrl, setUploadedImageUrl] = useState('');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { categoryOption, supplierOption } = useAppSelector(
@@ -28,21 +30,28 @@ const AddProduct = () => {
     formState: { errors, isSubmitting },
   } = useForm<Omit<ProductProps, '_id'>>({
     defaultValues: {
+      image: '',
       name: '',
       sku: '',
-      category: '',
+      category: null,
       price: undefined,
       quantity: undefined,
       description: '',
-      supplier: '',
+      supplier: null,
     },
     resolver: yupResolver(productSchema),
   });
 
   const onSubmit: SubmitHandler<Omit<ProductProps, '_id'>> = async (data) => {
-    console.log('fghgfhfg', data);
+    console.log('data', data);
+    const productData = {
+      ...data,
+      image: uploadedImageUrl,
+    };
+    console.log(productData);
+
     try {
-      const result = await dispatch(addProduct(data));
+      const result = await dispatch(addProduct(productData));
       if (addProduct.fulfilled.match(result)) {
         toast.success('Product added successfully');
         reset();
@@ -91,6 +100,13 @@ const AddProduct = () => {
       </div>
       <div className='bg-white rounded-md p-4'>
         <form onSubmit={handleSubmit(onSubmit)}>
+          <ImageUpload
+            id='prodimage'
+            requiredLabel
+            label='Upload your image'
+            containerClassName='mb-4'
+            setUploadedImageUrl={setUploadedImageUrl}
+          />
           <div className='flex gap-4 flex-wrap mb-4'>
             <Input
               id='name'
@@ -111,7 +127,6 @@ const AddProduct = () => {
           </div>
           <div className='flex gap-4 flex-wrap mb-4'>
             <Select
-              containerClassname='mb-4'
               label='Category'
               id='category'
               defaultValue=''
@@ -137,7 +152,6 @@ const AddProduct = () => {
               error={errors.quantity?.message}
             />
             <Select
-              containerClassname='mb-4'
               id='supplier'
               label='Supplier'
               defaultValue=''

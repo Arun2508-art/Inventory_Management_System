@@ -11,8 +11,15 @@ import type {
 export const productSchema: yup.ObjectSchema<Omit<ProductProps, '_id'>> =
   yup.object({
     name: yup.string().required('Please enter name'),
+    image: yup.string().optional(),
     sku: yup.string().required(),
-    category: yup.string().optional(),
+    category: yup
+      .object({
+        _id: yup.string().required(),
+        name: yup.string().required(),
+      })
+      .nullable()
+      .notRequired(),
     price: yup
       .number()
       .transform((value, originValue) =>
@@ -27,7 +34,13 @@ export const productSchema: yup.ObjectSchema<Omit<ProductProps, '_id'>> =
       )
       .typeError('Quantity must be a number')
       .optional(),
-    supplier: yup.string().optional(),
+    supplier: yup
+      .object({
+        _id: yup.string().required(),
+        name: yup.string().required(),
+      })
+      .nullable()
+      .notRequired(),
     description: yup.string().optional(),
   });
 

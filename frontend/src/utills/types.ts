@@ -14,11 +14,12 @@ export interface OnSuccessHandlerProps {
 export interface ProductProps {
   _id: string;
   name: string;
+  image?: string;
   sku: string;
-  category?: Pick<CategoryProps, '_id' | 'name'> | string;
+  category?: Pick<CategoryProps, '_id' | 'name'> | null;
   price?: number;
   quantity?: number;
-  supplier?: Pick<SupplierProps, '_id' | 'name'> | string;
+  supplier?: Pick<SupplierProps, '_id' | 'name'> | null;
   description?: string;
 }
 
