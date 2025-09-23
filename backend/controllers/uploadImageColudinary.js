@@ -6,10 +6,12 @@ const uploadSingleImage = async (req, res) => {
       return res.status(400).json({ error: 'No image file uploaded' });
     }
 
+    const data = { name: req.file.originalname, url: req.file.path };
+
     res.json({
       success: true,
       message: 'Single file uploaded successfully',
-      data: req.file,
+      data,
     });
   } catch (error) {
     res.json({
@@ -24,8 +26,10 @@ const uploadMultipleImages = async (req, res) => {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ error: 'No image files uploaded' });
     }
-
-    const data = req.files.map((file) => file.path);
+    const data = req.files.map((file) => ({
+      name: file.originalname,
+      url: file.path,
+    }));
 
     res.json({
       success: true,

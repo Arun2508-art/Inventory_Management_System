@@ -21,11 +21,11 @@ const columns: Column<CategoryProps>[] = [
     key: 'name',
     label: 'Name',
     sort: true,
-    render: (value) => (
+    render: (value, row) => (
       <div className='flex gap-2 items-center'>
         <img
-          src={'/noAvatar.png'}
-          alt=''
+          src={row.image?.url || '/noAvatar.png'}
+          alt={row.image?.name}
           width={30}
           height={30}
           className='rounded-md'

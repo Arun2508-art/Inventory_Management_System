@@ -13,11 +13,11 @@ import {
   fetchCategorySupplier,
 } from '../../store/slice/productSlice';
 import { useAppDispatch, useAppSelector } from '../../utills/reduxHook';
-import type { ProductProps } from '../../utills/types';
+import type { ImageType, ProductProps } from '../../utills/types';
 import { productSchema } from '../../utills/yupSchema';
 
 const AddProduct = () => {
-  const [uploadedImageUrl, setUploadedImageUrl] = useState('');
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<ImageType[]>([]);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { categoryOption, supplierOption } = useAppSelector(
@@ -30,7 +30,7 @@ const AddProduct = () => {
     formState: { errors, isSubmitting },
   } = useForm<Omit<ProductProps, '_id'>>({
     defaultValues: {
-      image: '',
+      images: [],
       name: '',
       sku: '',
       category: null,
@@ -43,12 +43,10 @@ const AddProduct = () => {
   });
 
   const onSubmit: SubmitHandler<Omit<ProductProps, '_id'>> = async (data) => {
-    console.log('data', data);
     const productData = {
       ...data,
-      image: uploadedImageUrl,
+      images: uploadedImageUrl,
     };
-    console.log(productData);
 
     try {
       const result = await dispatch(addProduct(productData));
@@ -105,7 +103,8 @@ const AddProduct = () => {
             requiredLabel
             label='Upload your image'
             containerClassName='mb-4'
-            setUploadedImageUrl={setUploadedImageUrl}
+            setUploadedImageData={setUploadedImageUrl}
+            multiple
           />
           <div className='flex gap-4 flex-wrap mb-4'>
             <Input

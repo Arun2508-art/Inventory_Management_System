@@ -19,8 +19,8 @@ const fetchAllCategories = async (req, res) => {
 
 // POST create new category
 const addCategory = async (req, res) => {
-  const { name, sku, description } = req.body;
-  const category = new Category({ name, sku, description });
+  const { name, sku, image, description } = req.body;
+  const category = new Category({ name, sku, image, description });
 
   try {
     const newCategory = await category.save();

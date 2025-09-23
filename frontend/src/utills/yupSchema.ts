@@ -11,7 +11,15 @@ import type {
 export const productSchema: yup.ObjectSchema<Omit<ProductProps, '_id'>> =
   yup.object({
     name: yup.string().required('Please enter name'),
-    image: yup.string().optional(),
+    images: yup
+      .array()
+      .of(
+        yup.object({
+          url: yup.string().required('Image URL is required'),
+          name: yup.string().required('Image name is required'),
+        })
+      )
+      .optional(),
     sku: yup.string().required(),
     category: yup
       .object({
@@ -44,12 +52,14 @@ export const productSchema: yup.ObjectSchema<Omit<ProductProps, '_id'>> =
     description: yup.string().optional(),
   });
 
-export const categorySchema: yup.ObjectSchema<Omit<CategoryProps, '_id'>> =
-  yup.object({
-    name: yup.string().required('Please enter name'),
-    sku: yup.string().required(),
-    description: yup.string().optional(),
-  });
+export const categorySchema: yup.ObjectSchema<
+  Omit<CategoryProps, '_id' | 'image'>
+> = yup.object({
+  name: yup.string().required('Please enter name'),
+  sku: yup.string().required(),
+
+  description: yup.string().optional(),
+});
 
 export const staffSchema: yup.ObjectSchema<Omit<employeeProps, '_id'>> =
   yup.object({

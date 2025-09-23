@@ -15,18 +15,20 @@ const columns: Column<ProductProps>[] = [
   {
     key: 'name',
     label: 'Product Info',
-    render: (value, row) => (
-      <div className='flex gap-2 items-center'>
-        <img
-          src={row.image || 'noAvatar.png'}
-          alt=''
-          width={40}
-          height={40}
-          className='rounded-md object-cover'
-        />
-        <span className='capitalize'>{value as string}</span>
-      </div>
-    ),
+    render: (value, row) => {
+      return (
+        <div className='flex gap-2 items-center'>
+          <img
+            src={row.images?.[0].url || 'noAvatar.png'}
+            alt={row.images?.[0].name || ''}
+            width={50}
+            height={50}
+            className='rounded-md object-cover'
+          />
+          <span className='capitalize'>{value as string}</span>
+        </div>
+      );
+    },
   },
   { key: 'sku', label: 'SKU' },
   {

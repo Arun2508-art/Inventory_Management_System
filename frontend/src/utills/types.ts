@@ -11,10 +11,15 @@ export interface OnSuccessHandlerProps {
   isOpen: boolean;
 }
 
+export type ImageType = {
+  name: string;
+  url: string;
+};
+
 export interface ProductProps {
   _id: string;
   name: string;
-  image?: string;
+  images?: ImageType[];
   sku: string;
   category?: Pick<CategoryProps, '_id' | 'name'> | null;
   price?: number;
@@ -27,6 +32,7 @@ export interface CategoryProps {
   _id: string;
   name: string;
   sku: string;
+  image?: ImageType;
   description?: string;
 }
 

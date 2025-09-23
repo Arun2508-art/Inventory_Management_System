@@ -1,15 +1,24 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import ImageUpload from '../../components/ImageUpload';
 import Input from '../../components/Input';
 import Textarea from '../../components/Textarea';
 import { addCategory } from '../../store/slice/categorySlice';
 import { useAppDispatch } from '../../utills/reduxHook';
-import type { CategoryProps, OnSuccessHandlerProps } from '../../utills/types';
+import type {
+  CategoryProps,
+  ImageType,
+  OnSuccessHandlerProps,
+} from '../../utills/types';
 import { categorySchema } from '../../utills/yupSchema';
 
 const AddCategory = ({ onSuccess, isOpen }: OnSuccessHandlerProps) => {
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<ImageType>({
+    name: '',
+    url: '',
+  });
   const dispatch = useAppDispatch();
 
   const {
@@ -27,8 +36,13 @@ const AddCategory = ({ onSuccess, isOpen }: OnSuccessHandlerProps) => {
   });
 
   const onSubmit: SubmitHandler<Omit<CategoryProps, '_id'>> = async (data) => {
+    const categoryData = {
+      ...data,
+      image: uploadedImageUrl,
+    };
+
     try {
-      const result = await dispatch(addCategory(data));
+      const result = await dispatch(addCategory(categoryData));
       if (addCategory.fulfilled.match(result)) {
         onSuccess();
         toast.success('Category added successfully');
@@ -50,6 +64,14 @@ const AddCategory = ({ onSuccess, isOpen }: OnSuccessHandlerProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <ImageUpload
+        id='categoryimage'
+        requiredLabel
+        label='Upload your image'
+        containerClassName='mb-4'
+        setUploadedImageData={setUploadedImageUrl}
+      />
+
       <Input
         id='name'
         containerClassName='mb-4'

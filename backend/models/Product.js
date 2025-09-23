@@ -3,7 +3,12 @@ const mongoose = require('mongoose');
 const productSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    image: { type: String },
+    images: [
+      {
+        name: { type: String },
+        url: { type: String },
+      },
+    ],
     sku: { type: String, unique: true, required: true }, // Stock Keeping Unit
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
     price: { type: Number, default: null },

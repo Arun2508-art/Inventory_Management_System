@@ -19,12 +19,20 @@ const fetchAllProduct = async (req, res) => {
 
 // POST create new product
 const addProduct = async (req, res) => {
-  const { name, sku, image, category, price, quantity, description, supplier } =
-    req.body;
+  const {
+    name,
+    sku,
+    images,
+    category,
+    price,
+    quantity,
+    description,
+    supplier,
+  } = req.body;
   const product = new Product({
     name,
     sku,
-    image,
+    images,
     category,
     price,
     quantity,
