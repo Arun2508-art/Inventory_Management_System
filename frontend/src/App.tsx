@@ -1,6 +1,9 @@
 import { Route, Routes } from 'react-router';
 import './App.css';
+import AuthLayout from './layouts/AuthLayout';
 import MainLayout from './layouts/MainLayout';
+import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
 import Billing from './pages/Billing';
 import ListCategory from './pages/category/ListCategory';
 import HomePage from './pages/HomePage';
@@ -28,6 +31,10 @@ function App() {
         </Route>
         <Route path='warehouses' element={<ListWarehouse />} />
         <Route path='billing' element={<Billing />} />
+      </Route>
+      <Route element={<AuthLayout />}>
+        <Route path='login' element={<Login />} />
+        <Route path='register' element={<Register />} />
       </Route>
     </Routes>
   );

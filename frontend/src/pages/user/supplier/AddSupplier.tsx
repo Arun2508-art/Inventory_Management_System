@@ -1,18 +1,24 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import ImageUpload from '../../../components/ImageUpload';
 import Input from '../../../components/Input';
 import Textarea from '../../../components/Textarea';
 import { addSupplier } from '../../../store/slice/supplierSlice';
 import { useAppDispatch } from '../../../utills/reduxHook';
 import type {
+  ImageType,
   OnSuccessHandlerProps,
   SupplierProps,
 } from '../../../utills/types';
 import { supplierSchema } from '../../../utills/yupSchema';
 
 const AddSupplier = ({ onSuccess, isOpen }: OnSuccessHandlerProps) => {
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<ImageType>({
+    name: '',
+    url: '',
+  });
   const dispatch = useAppDispatch();
   const {
     register,
@@ -31,8 +37,13 @@ const AddSupplier = ({ onSuccess, isOpen }: OnSuccessHandlerProps) => {
   });
 
   const onSubmit: SubmitHandler<Omit<SupplierProps, '_id'>> = async (data) => {
+    const UploadData = {
+      ...data,
+      image: uploadedImageUrl,
+    };
+
     try {
-      const result = await dispatch(addSupplier(data));
+      const result = await dispatch(addSupplier(UploadData));
       if (addSupplier.fulfilled.match(result)) {
         onSuccess();
         toast.success('Supplier added successfully');
@@ -54,6 +65,14 @@ const AddSupplier = ({ onSuccess, isOpen }: OnSuccessHandlerProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <ImageUpload
+        id='categoryimage'
+        requiredLabel
+        label='Upload your image'
+        containerClassName='mb-4'
+        setUploadedImageData={setUploadedImageUrl}
+      />
+
       <Input
         id='name'
         containerClassName='mb-4'

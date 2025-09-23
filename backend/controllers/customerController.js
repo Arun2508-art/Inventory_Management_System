@@ -18,8 +18,8 @@ const fecthCustomers = async (req, res) => {
 
 // POST create new Customer
 const addCustomer = async (req, res) => {
-  const { name, email, phone, address } = req.body;
-  const customer = new Customer({ name, email, phone, address });
+  const { name, email, image, phone, address } = req.body;
+  const customer = new Customer({ name, email, image, phone, address });
 
   try {
     const newCustomer = await customer.save();

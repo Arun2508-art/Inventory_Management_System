@@ -1,14 +1,16 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { IconCircleArrowLeft } from '@tabler/icons-react';
+import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
+import ImageUpload from '../../../components/ImageUpload';
 import Input from '../../../components/Input';
 import Select from '../../../components/Select';
 import Textarea from '../../../components/Textarea';
 import { addEmployee } from '../../../store/slice/employeeSlice';
 import { useAppDispatch } from '../../../utills/reduxHook';
-import type { employeeProps } from '../../../utills/types';
+import type { employeeProps, ImageType } from '../../../utills/types';
 import { staffSchema } from '../../../utills/yupSchema';
 
 const roleData = [
@@ -26,6 +28,10 @@ const statusData = [
 ];
 
 const AddStaff = () => {
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<ImageType>({
+    name: '',
+    url: '',
+  });
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const {
@@ -47,8 +53,13 @@ const AddStaff = () => {
   });
 
   const onSubmit: SubmitHandler<Omit<employeeProps, '_id'>> = async (data) => {
+    const UploadData = {
+      ...data,
+      image: uploadedImageUrl,
+    };
+
     try {
-      const result = await dispatch(addEmployee(data));
+      const result = await dispatch(addEmployee(UploadData));
       if (addEmployee.fulfilled.match(result)) {
         toast.success('Employee added successfully');
         reset;
@@ -77,6 +88,13 @@ const AddStaff = () => {
 
       <div className='bg-white rounded-md p-4'>
         <form onSubmit={handleSubmit(onSubmit)}>
+          <ImageUpload
+            id='categoryimage'
+            requiredLabel
+            label='Upload your image'
+            containerClassName='mb-4'
+            setUploadedImageData={setUploadedImageUrl}
+          />
           <div className='flex gap-4 flex-wrap mb-4'>
             <Input
               id='name'

@@ -44,6 +44,7 @@ export interface employeeProps {
   role: userRole;
   phone: string;
   address: string;
+  image?: ImageType;
 
   department?: string; // e.g. 'Inventory', 'Sales', 'Logistics'
   status: '' | 'active' | 'inactive' | 'onLeave';
@@ -60,6 +61,7 @@ export interface SupplierProps {
   phone: string;
   email: string;
   address: string;
+  image?: ImageType;
 }
 
 export interface CustomerProps {
@@ -68,6 +70,7 @@ export interface CustomerProps {
   phone: string;
   email: string;
   address: string;
+  image?: ImageType;
 }
 
 export interface warehouseProps {

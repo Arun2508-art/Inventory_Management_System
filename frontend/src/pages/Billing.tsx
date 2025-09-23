@@ -151,7 +151,7 @@ const Billing = () => {
                 <div>{item.sku}</div>
                 <div>
                   {typeof item.category === 'object'
-                    ? item.category.name
+                    ? item.category?.name
                     : item.category}
                 </div>
                 <div>{item.quantity}</div>

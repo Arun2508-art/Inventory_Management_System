@@ -11,6 +11,10 @@ const EmployeeSchema = new mongoose.Schema(
     },
     phone: { type: String, required: true, unique: true },
     address: { type: String, required: true },
+    image: {
+      name: { type: String },
+      url: { type: String },
+    },
     department: { type: String },
     employeeCode: { type: String, unique: true },
     status: {

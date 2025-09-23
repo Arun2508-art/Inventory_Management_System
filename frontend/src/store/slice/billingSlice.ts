@@ -29,7 +29,6 @@ export const fetchBillingProduct = createAsyncThunk(
       const response = await axios.get(
         `http://localhost:5000/api/billing/${id}`
       );
-      console.log(response);
       if (response.data.success) {
         return response.data;
       } else {

@@ -13,6 +13,10 @@ const CustomerSchema = new mongoose.Schema(
       type: String,
       unique: true,
     },
+    image: {
+      name: { type: String },
+      url: { type: String },
+    },
     address: { type: String },
   },
   { timestamps: true }

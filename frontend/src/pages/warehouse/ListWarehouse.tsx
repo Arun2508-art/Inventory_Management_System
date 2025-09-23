@@ -20,18 +20,7 @@ const columns: Column<warehouseProps>[] = [
   {
     key: 'name',
     label: 'Name',
-    render: (value) => (
-      <div className='flex gap-2 items-center'>
-        <img
-          src={'/noAvatar.png'}
-          alt=''
-          width={30}
-          height={30}
-          className='rounded-md'
-        />
-        <span className='capitalize'>{value as string}</span>
-      </div>
-    ),
+    render: (value) => <div className='capitalize'>{value}</div>,
   },
   {
     key: 'contactPerson',

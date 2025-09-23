@@ -19,8 +19,16 @@ const fetchEmployee = async (req, res) => {
 // POST create new Employee
 const addEmployee = async (req, res) => {
   try {
-    const { name, email, phone, address, role, department, employeeCode } =
-      req.body;
+    const {
+      name,
+      email,
+      phone,
+      image,
+      address,
+      role,
+      department,
+      employeeCode,
+    } = req.body;
 
     // Optional: validate required fields
     if (!name || !email || !role) {
@@ -41,6 +49,7 @@ const addEmployee = async (req, res) => {
     const employee = new Employee({
       name,
       email,
+      image,
       phone,
       address,
       role,

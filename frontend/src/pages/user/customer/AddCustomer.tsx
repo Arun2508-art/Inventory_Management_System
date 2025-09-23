@@ -1,18 +1,24 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import ImageUpload from '../../../components/ImageUpload';
 import Input from '../../../components/Input';
 import Textarea from '../../../components/Textarea';
 import { addCustomer } from '../../../store/slice/customerSlice';
 import { useAppDispatch } from '../../../utills/reduxHook';
 import type {
   CustomerProps,
+  ImageType,
   OnSuccessHandlerProps,
 } from '../../../utills/types';
 import { customerSchema } from '../../../utills/yupSchema';
 
 const AddCustomer = ({ onSuccess, isOpen }: OnSuccessHandlerProps) => {
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<ImageType>({
+    name: '',
+    url: '',
+  });
   const dispatch = useAppDispatch();
 
   const {
@@ -33,9 +39,13 @@ const AddCustomer = ({ onSuccess, isOpen }: OnSuccessHandlerProps) => {
   const onHandleSubmit: SubmitHandler<Omit<CustomerProps, '_id'>> = async (
     data
   ) => {
-    console.log(data);
+    const UploadData = {
+      ...data,
+      image: uploadedImageUrl,
+    };
+
     try {
-      const result = await dispatch(addCustomer(data));
+      const result = await dispatch(addCustomer(UploadData));
       if (addCustomer.fulfilled.match(result)) {
         onSuccess();
         toast.success('Customer added successfully');
@@ -56,6 +66,14 @@ const AddCustomer = ({ onSuccess, isOpen }: OnSuccessHandlerProps) => {
 
   return (
     <form onSubmit={handleSubmit(onHandleSubmit)}>
+      <ImageUpload
+        id='categoryimage'
+        requiredLabel
+        label='Upload your image'
+        containerClassName='mb-4'
+        setUploadedImageData={setUploadedImageUrl}
+      />
+
       <Input
         id='name'
         containerClassName='mb-4'

@@ -12,6 +12,10 @@ const SupplierSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    image: {
+      name: { type: String },
+      url: { type: String },
+    },
     phone: { type: String, unique: true, required: true },
     email: {
       type: String,
