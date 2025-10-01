@@ -15,6 +15,7 @@ import { catergoryFilter } from '../../utills/filterData';
 import { useAppDispatch, useAppSelector } from '../../utills/reduxHook';
 import type { CategoryProps } from '../../utills/types';
 import AddCategory from './AddCategory';
+import UpdateCategory from './UpdateCategory';
 
 const columns: Column<CategoryProps>[] = [
   {
@@ -40,6 +41,13 @@ const columns: Column<CategoryProps>[] = [
 
 const ListCategory = () => {
   const [open, setOpen] = useState(false);
+  const [openUpdateForm, setOpenUpdateForm] = useState(false);
+  const [initialState, setInitialState] = useState<CategoryProps>({
+    name: '',
+    sku: '',
+    description: '',
+    _id: '',
+  });
   const [filterText, setFilterText] = useState('Name');
   const dispatch = useAppDispatch();
   const { categoryList, isLoading, error } = useAppSelector(
@@ -62,6 +70,11 @@ const ListCategory = () => {
     if (deleteCategory.fulfilled.match(result)) {
       toast.success('Category deleted successfully');
     }
+  };
+
+  const handleEdit = (data: CategoryProps) => {
+    setInitialState(data);
+    setOpenUpdateForm(true);
   };
 
   useEffect(() => {
@@ -97,7 +110,7 @@ const ListCategory = () => {
                   columns={columns}
                   data={currentPageItems}
                   showCheckboxes
-                  onEdit={(row) => console.log('Edit', row)}
+                  onEdit={handleEdit}
                   onDelete={handleDelete}
                 />
                 <Pagination
@@ -120,6 +133,18 @@ const ListCategory = () => {
 
       <Drawer title='Add Category' isOpen={open} onClose={() => setOpen(false)}>
         <AddCategory isOpen={open} onSuccess={() => setOpen(false)} />
+      </Drawer>
+      <Drawer
+        title='Update Category'
+        isOpen={openUpdateForm}
+        onClose={() => setOpenUpdateForm(false)}
+      >
+        <UpdateCategory
+          isOpen={openUpdateForm}
+          onSuccess={() => setOpenUpdateForm(false)}
+          initialState={initialState}
+          setInitialState={setInitialState}
+        />
       </Drawer>
     </>
   );

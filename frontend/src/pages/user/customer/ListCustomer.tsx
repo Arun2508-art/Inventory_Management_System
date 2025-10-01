@@ -79,7 +79,7 @@ const ListCustomer = () => {
 
             {customers.length === 0 ? (
               <p className='h-[calc(100vh-210px)] flex justify-center items-center'>
-                No supplier details available.
+                No Customer details available.
               </p>
             ) : (
               <Table1<CustomerProps>

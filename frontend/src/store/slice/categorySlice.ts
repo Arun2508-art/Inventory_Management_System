@@ -54,6 +54,26 @@ export const addCategory = createAsyncThunk(
   }
 );
 
+export const updateCategory = createAsyncThunk<
+  any,
+  { id: string; category: Omit<CategoryProps, '_id'> }
+>('category/updateCategory', async ({ id, category }, { rejectWithValue }) => {
+  console.log(category);
+  try {
+    const res = await axios.put(
+      `http://localhost:5000/api/category/${id}`,
+      category
+    );
+    if (res.data.success) {
+      return res.data;
+    } else {
+      throw new Error('Failed to add category');
+    }
+  } catch (error: any) {
+    return rejectWithValue(error.message || 'Failed to add category');
+  }
+});
+
 // Async thunk to delete a category by ID
 export const deleteCategory = createAsyncThunk(
   'category/deleteCategory',
@@ -110,6 +130,23 @@ export const categorySlice = createSlice({
         state.status = 'failed';
         state.isLoading = false;
         state.error = (action.payload as string) || 'Failed to add category';
+      })
+      .addCase(updateCategory.pending, (state) => {
+        state.status = 'loading';
+        state.isLoading = true;
+      })
+      .addCase(updateCategory.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.isLoading = false;
+        state.categoryList = state.categoryList.map((item) =>
+          item._id === action.payload.data._id ? action.payload.data : item
+        );
+        state.error = null;
+      })
+      .addCase(updateCategory.rejected, (state, action) => {
+        state.status = 'failed';
+        state.isLoading = false;
+        state.error = (action.payload as string) || 'Failed to delete category';
       })
       .addCase(deleteCategory.pending, (state) => {
         state.status = 'loading';
