@@ -14,7 +14,20 @@ const productSchema = new mongoose.Schema(
     price: { type: Number, default: null },
     quantity: { type: Number, default: null },
     description: { type: String },
-    supplier: { type: mongoose.Schema.Types.ObjectId, ref: 'Supplier' },
+    supplier: {
+      type: mongoose.Schema.Types.Mixed,
+      ref: 'Supplier',
+      validate: {
+        validator: function (value) {
+          // allow empty string
+          if (value === '') return true;
+
+          // allow valid ObjectId
+          return mongoose.Types.ObjectId.isValid(value);
+        },
+        message: 'Category must be a valid ObjectId or an empty string.',
+      },
+    },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
   },

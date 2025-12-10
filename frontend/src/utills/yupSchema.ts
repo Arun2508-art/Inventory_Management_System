@@ -21,13 +21,7 @@ export const productSchema: yup.ObjectSchema<Omit<ProductProps, '_id'>> =
       )
       .optional(),
     sku: yup.string().required(),
-    category: yup
-      .object({
-        _id: yup.string().required(),
-        name: yup.string().required(),
-      })
-      .nullable()
-      .notRequired(),
+    category: yup.string().optional(),
     price: yup
       .number()
       .transform((value, originValue) =>
@@ -42,13 +36,7 @@ export const productSchema: yup.ObjectSchema<Omit<ProductProps, '_id'>> =
       )
       .typeError('Quantity must be a number')
       .optional(),
-    supplier: yup
-      .object({
-        _id: yup.string().required(),
-        name: yup.string().required(),
-      })
-      .nullable()
-      .notRequired(),
+    supplier: yup.string().optional(),
     description: yup.string().optional(),
   });
 

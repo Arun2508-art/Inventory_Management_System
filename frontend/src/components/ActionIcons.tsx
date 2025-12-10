@@ -53,7 +53,7 @@ const ActionIcons = ({
   return (
     <div className='flex gap-3 items-center'>
       {Array.isArray(filter) && filter.length > 0 && (
-        <div className='relative'>
+        <div className='relative' ref={dropdownFilterRef}>
           <IconFilter2
             width={24}
             height={24}
@@ -61,10 +61,7 @@ const ActionIcons = ({
             onClick={() => setFilterOpen(!filterOpen)}
           />
           {filterOpen && (
-            <div
-              className='absolute top-full right-1 min-w-20 bg-blue-200 p-1 mt-1 rounded'
-              ref={dropdownFilterRef}
-            >
+            <div className='absolute top-full right-1 min-w-20 bg-blue-200 p-1 mt-1 rounded'>
               <ul className='flex flex-col gap-1'>
                 {filter.map((item) => (
                   <li

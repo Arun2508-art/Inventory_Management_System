@@ -5,9 +5,7 @@ const Supplier = require('../models/Supplier');
 // GET all products
 const fetchAllProduct = async (req, res) => {
   try {
-    const products = await Product.find()
-      .populate('category', 'name')
-      .populate('supplier', 'name');
+    const products = await Product.find().populate('category', 'name');
     return res.json({
       success: true,
       data: products,

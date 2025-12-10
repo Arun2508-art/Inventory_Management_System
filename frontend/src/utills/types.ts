@@ -21,10 +21,10 @@ export interface ProductProps {
   name: string;
   images?: ImageType[];
   sku: string;
-  category?: Pick<CategoryProps, '_id' | 'name'> | null;
+  category?: string | Pick<CategoryProps, 'name'>;
   price?: number;
   quantity?: number;
-  supplier?: Pick<SupplierProps, '_id' | 'name'> | null;
+  supplier?: string | Pick<SupplierProps, 'name'>;
   description?: string;
 }
 

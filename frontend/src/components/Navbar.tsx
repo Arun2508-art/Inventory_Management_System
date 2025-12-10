@@ -65,7 +65,7 @@ const Navbar = () => {
               </div>
             </div>
             {activeMenu && (
-              <div className='absolute bg-blue-200 p-2 top-full right-0 rounded-md flex flex-col gap-2 mt-2 min-w-36'>
+              <div className='absolute bg-blue-200 p-2 top-full right-0 rounded-md flex flex-col gap-2 mt-2 min-w-36 z-50'>
                 <div className='flex gap-2 text-sm py-2 px-1 hover:bg-blue-100 rounded-md cursor-not-allowed'>
                   <IconUser width={16} height={16} />
                   MyProfile

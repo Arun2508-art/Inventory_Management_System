@@ -18,13 +18,23 @@ const columns: Column<ProductProps>[] = [
     render: (value, row) => {
       return (
         <div className='flex gap-2 items-center'>
-          <img
-            src={row.images?.[0].url || 'noAvatar.png'}
-            alt={row.images?.[0].name || ''}
-            width={50}
-            height={50}
-            className='rounded-md object-cover'
-          />
+          {row.images && row.images.length > 0 ? (
+            <img
+              src={row.images[0].url}
+              alt={row.images[0].name || 'avatar'}
+              width={50}
+              height={50}
+              className='rounded-md object-cover'
+            />
+          ) : (
+            <img
+              src='noAvatar.png'
+              alt='avatar'
+              width={50}
+              height={50}
+              className='rounded-md object-cover'
+            />
+          )}
           <span className='capitalize'>{value as string}</span>
         </div>
       );
@@ -91,6 +101,7 @@ const ListProduct = () => {
     dispatch(fetchProducts());
   }, [dispatch]);
 
+  console.log(products);
   return (
     <Container title='Products'>
       {isLoading ? (

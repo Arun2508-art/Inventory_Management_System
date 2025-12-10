@@ -33,11 +33,11 @@ const AddProduct = () => {
       images: [],
       name: '',
       sku: '',
-      category: null,
+      category: '',
       price: undefined,
       quantity: undefined,
       description: '',
-      supplier: null,
+      supplier: '',
     },
     resolver: yupResolver(productSchema),
   });
@@ -47,7 +47,7 @@ const AddProduct = () => {
       ...data,
       images: uploadedImageUrl,
     };
-
+    console.log(productData);
     try {
       const result = await dispatch(addProduct(productData));
       if (addProduct.fulfilled.match(result)) {
